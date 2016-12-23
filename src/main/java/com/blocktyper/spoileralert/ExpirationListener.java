@@ -367,7 +367,7 @@ public class ExpirationListener implements Listener {
 		SpoilerAlertCalendar expirationDate = SpoilerAlertCalendar.getSpoilersCalendarFromDateString(expirationString);
 		SpoilerAlertCalendar currentDate = new SpoilerAlertCalendar(world);
 
-		long daysExpired = currentDate.getDay() - expirationDate.getDay();
+		long daysExpired = currentDate.getDay() - (expirationDate.getDay()-1);
 
 		plugin.debugInfo((daysExpired > 0 ? "daysExpired: " : "daysUntilExpiration: ") + Math.abs(daysExpired));
 
