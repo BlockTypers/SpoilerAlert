@@ -5,8 +5,8 @@
 
 
 ############## DEBUG ##########################
-debug: true
-log.recipes.enable: true
+debug: false
+log.recipes.enable: false
 
 spoileralert-set-expiration-on-inventory-click: true
 
@@ -26,6 +26,7 @@ spoileralert-shelf-life:
   - BAKED_POTATO=5
   - BEETROOT=7
   - BEETROOT_SOUP=7
+  - BROWN_MUSHROOM=10
   - CAKE=14
   - CARROT=7
   - CARROT_ITEM=7
@@ -50,7 +51,6 @@ spoileralert-shelf-life:
   - RAW_CHICKEN=2
   - RAW_FISH=2
   - RED_MUSHROOM=10
-  - BROWN_MUSHROOM=7
   - SPECKLED_MELON=7
   - WHEAT=21
 

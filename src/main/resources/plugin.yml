@@ -9,6 +9,6 @@ commands:
   spoil-date: 
     description: Displays date
   spoil-hunger: 
-    description: OP only. Sets hunger level to 0.
+    description: OP only. Cuts hunger level in half.
   spoil-set-day: 
     description: OP only. Sets the day number.
