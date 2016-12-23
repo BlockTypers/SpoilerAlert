@@ -1,0 +1,10 @@
+name: SpoilerAlert
+version: 1.0.0
+main:  com.blocktyper.spoileralert.SpoilerAlertPlugin
+author: spaarkimus
+website: blocktyper.com
+database: false
+description: Does this smell weird to you?
+commands:
+  spoil-date: 
+    description: Displays date

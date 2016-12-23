@@ -1,0 +1,71 @@
+###############################################
+################# SPOILERS ####################
+###############################################
+
+
+
+############## DEBUG ##########################
+debug: true
+log.recipes.enable: true
+
+spoileralert-base-debuf-duration-in-seconds: 30
+
+spoileralert-blinding-enabled: true
+spoileralert-confusion-enabled: true
+
+spoileralert-harm-enabled: true
+spoileralert-age-before-harm-as-proportion-of-shelf-life: 3
+
+spoileralert-decrease-food-level-enabled: true
+spoileralert-decrease-saturation-enabled: true
+
+spoileralert-shelf-life: 
+  - APPLE=7
+  - BAKED_POTATO=5
+  - BEETROOT=7
+  - BEETROOT_SOUP=7
+  - CAKE=14
+  - CARROT=7
+  - CHORUS_FRUIT=5
+  - COOKED_BEEF=7
+  - COOKED_CHICKEN=7
+  - COOKED_FISH=7
+  - COOKED_MUTTON=7
+  - COOKED_RABBIT=7
+  - COOKIE=14
+  - CROPS=21
+  - MELON=7
+  - MUSHROOM_SOUP=5
+  - MUTTON=2
+  - PORK=2
+  - POTATO=21
+  - PUMPKIN=7
+  - PUMPKIN_PIE=7
+  - RABBIT_STEW=7
+  - RAW_BEEF=2
+  - RAW_CHICKEN=2
+  - RAW_FISH=2
+  - SPECKLED_MELON=7
+  - WHEAT=21
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
