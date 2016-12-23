@@ -8,3 +8,7 @@ description: Does this smell weird to you?
 commands:
   spoil-date: 
     description: Displays date
+  spoil-hunger: 
+    description: OP only. Sets hunger level to 0.
+  spoil-set-day: 
+    description: OP only. Sets the day number.

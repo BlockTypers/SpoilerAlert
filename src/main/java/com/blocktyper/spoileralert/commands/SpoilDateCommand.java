@@ -1,9 +1,12 @@
-package com.blocktyper.spoileralert;
+package com.blocktyper.spoileralert.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import com.blocktyper.spoileralert.SpoilerAlertCalendar;
+import com.blocktyper.spoileralert.SpoilerAlertPlugin;
 
 public class SpoilDateCommand implements CommandExecutor {
 

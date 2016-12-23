@@ -177,7 +177,10 @@ public class ExpirationListener implements Listener {
 		}
 
 		Player player = ((Player) event.getWhoClicked());
-		event.setCurrentItem(setExpirationDate(event.getCurrentItem(), player.getWorld(), null));
+		
+		if(plugin.getConfig().getBoolean(ConfigKeyEnum.SET_EXPIRATION_ON_INVENTORY_CLICK.getKey(), true)){
+			event.setCurrentItem(setExpirationDate(event.getCurrentItem(), player.getWorld(), null));
+		}
 
 		Long daysExpired = getDaysExpired(event.getCurrentItem(), player.getWorld());
 

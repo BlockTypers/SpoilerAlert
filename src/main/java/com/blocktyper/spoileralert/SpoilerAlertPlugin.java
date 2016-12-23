@@ -3,6 +3,9 @@ package com.blocktyper.spoileralert;
 import java.util.ResourceBundle;
 
 import com.blocktyper.plugin.BlockTyperPlugin;
+import com.blocktyper.spoileralert.commands.HungerCommand;
+import com.blocktyper.spoileralert.commands.SetDayCommand;
+import com.blocktyper.spoileralert.commands.SpoilDateCommand;
 
 public class SpoilerAlertPlugin extends BlockTyperPlugin {
 
@@ -15,6 +18,8 @@ public class SpoilerAlertPlugin extends BlockTyperPlugin {
 		super.onEnable();
 		new ExpirationListener(this);
 		new SpoilDateCommand(this);
+		new SetDayCommand(this);
+		new HungerCommand(this);
 		
 	}
 

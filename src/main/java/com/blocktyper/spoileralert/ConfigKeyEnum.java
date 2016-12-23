@@ -9,7 +9,8 @@ public enum ConfigKeyEnum {
 	HARM_ENABLED("spoileralert-harm-enabled"),
 	AGE_BEFORE_HARM_AS_PROPORTION_OF_SHELF_LIFE("spoileralert-age-before-harm-as-proportion-of-shelf-life"),
 	DECREASE_FOOD_LEVEL_ENABLED("spoileralert-decrease-food-level-enabled"),
-	DECREASE_SATURATION_ENABLED("spoileralert-decrease-saturation-enabled");
+	DECREASE_SATURATION_ENABLED("spoileralert-decrease-saturation-enabled"),
+	SET_EXPIRATION_ON_INVENTORY_CLICK("spoileralert-set-expiration-on-inventory-click");
 
 
 	private String key;

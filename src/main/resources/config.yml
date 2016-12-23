@@ -8,6 +8,8 @@
 debug: true
 log.recipes.enable: true
 
+spoileralert-set-expiration-on-inventory-click: true
+
 spoileralert-base-debuf-duration-in-seconds: 30
 
 spoileralert-blinding-enabled: true
@@ -26,6 +28,7 @@ spoileralert-shelf-life:
   - BEETROOT_SOUP=7
   - CAKE=14
   - CARROT=7
+  - CARROT_ITEM=7
   - CHORUS_FRUIT=5
   - COOKED_BEEF=7
   - COOKED_CHICKEN=7
@@ -39,12 +42,15 @@ spoileralert-shelf-life:
   - MUTTON=2
   - PORK=2
   - POTATO=21
+  - POTATO_ITEM=21
   - PUMPKIN=7
   - PUMPKIN_PIE=7
   - RABBIT_STEW=7
   - RAW_BEEF=2
   - RAW_CHICKEN=2
   - RAW_FISH=2
+  - RED_MUSHROOM=10
+  - BROWN_MUSHROOM=7
   - SPECKLED_MELON=7
   - WHEAT=21
 
