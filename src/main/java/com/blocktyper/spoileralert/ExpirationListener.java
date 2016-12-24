@@ -266,7 +266,7 @@ public class ExpirationListener implements Listener {
 			int days = 0;
 
 			if (daysExpired != null) {
-				days = (daysExpired.intValue()+1)*-1;
+				days = (daysExpired.intValue())*-1;
 			} else {
 				String lifeSpanExpression = lifeSpan.get();
 				String daysString = lifeSpanExpression.substring(lifeSpanExpression.indexOf("=") + 1);
