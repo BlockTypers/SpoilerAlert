@@ -89,14 +89,15 @@ recipe.candy-apple.output: APPLE
 ################## BEGIN Coarse Salt #################
 recipe.coarse-salt.name: Coarse Salt
 recipe.coarse-salt.rows: 
-  - ASA
-  - ACA
   - AWA
+  - ACA
+  - ASA
 recipe.coarse-salt.mats: 
   - S=SAND
   - C=COAL
   - W=WATER_BUCKET
 recipe.coarse-salt.output: SUGAR
+recipe.coarse-salt.amount: 4
 
 
 ################## BEGIN Salted Beef #################
