@@ -21,6 +21,10 @@ spoileralert-age-before-harm-as-proportion-of-shelf-life: 3
 spoileralert-decrease-food-level-enabled: true
 spoileralert-decrease-saturation-enabled: true
 
+spoileralert-recipe-shelf-life: 
+  - Candy Apple=21
+  - Salted Beef=21
+  
 spoileralert-shelf-life: 
   - APPLE=7
   - BAKED_POTATO=5
@@ -53,6 +57,64 @@ spoileralert-shelf-life:
   - SPECKLED_MELON=7
   - WHEAT=21
 
+
+
+
+############## RECIPES ############
+recipes:
+  - candy-apple
+  - coarse-salt
+  - salted-beef
+
+
+###############################################
+#################### RECIPES ##################
+###############################################
+
+
+################## BEGIN Candy Apple ############
+recipe.candy-apple.name: Candy Apple
+recipe.candy-apple.rows: 
+  - RSR
+  - SAS
+  - RTR
+recipe.candy-apple.mats: 
+  - S=SUGAR
+  - A=APPLE
+  - T=STICK
+  - R-AIR
+recipe.candy-apple.output: APPLE
+
+
+################## BEGIN Coarse Salt #################
+recipe.coarse-salt.name: Coarse Salt
+recipe.coarse-salt.rows: 
+  - ASA
+  - ACA
+  - AWA
+recipe.coarse-salt.mats: 
+  - S=SAND
+  - C=COAL
+  - W=WATER_BUCKET
+recipe.coarse-salt.output: SUGAR
+
+
+################## BEGIN Salted Beef #################
+recipe.salted-beef.name: Salted Beef
+recipe.salted-beef.rows: 
+  - ASA
+  - SBS
+  - ASA
+recipe.salted-beef.mats: 
+  - A=AIR
+  - B=COOKED_BEEF
+  - S=SUGAR
+recipe.salted-beef.output: COOKED_BEEF
+recipe.salted-beef.item.starts.with: 
+  - 1=Coarse Salt
+  - 3=Coarse Salt
+  - 5=Coarse Salt
+  - 7=Coarse Salt
 
 
 

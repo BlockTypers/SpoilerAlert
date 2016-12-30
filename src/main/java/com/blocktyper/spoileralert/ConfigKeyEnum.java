@@ -2,6 +2,7 @@ package com.blocktyper.spoileralert;
 
 public enum ConfigKeyEnum {
 	
+	RECIPE_LIFE_SPANS("spoileralert-recipe-shelf-life"),
 	LIFE_SPANS("spoileralert-shelf-life"),
 	BASE_DEBUFF_DURATION_IN_SECONDS("spoileralert-base-debuf-duration-in-seconds"),
 	BLINDING_ENABLED("spoileralert-blinding-enabled"),

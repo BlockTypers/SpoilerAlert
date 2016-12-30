@@ -6,21 +6,37 @@ import com.blocktyper.plugin.BlockTyperPlugin;
 import com.blocktyper.spoileralert.commands.HungerCommand;
 import com.blocktyper.spoileralert.commands.SetDayCommand;
 import com.blocktyper.spoileralert.commands.SpoilDateCommand;
+import com.blocktyper.spoileralert.listeners.CraftListener;
+import com.blocktyper.spoileralert.listeners.FoodEatListener;
+import com.blocktyper.spoileralert.listeners.FurnaceListener;
+import com.blocktyper.spoileralert.listeners.InventoryClickListener;
+import com.blocktyper.spoileralert.listeners.PickupListener;
+import com.blocktyper.spoileralert.listeners.BlockBreakListener;
+import com.blocktyper.spoileralert.listeners.BlockPlaceListener;
+import com.blocktyper.spoileralert.listeners.CakeListener;
 
 public class SpoilerAlertPlugin extends BlockTyperPlugin {
 
-	
-
 	public static final String RESOURCE_NAME = "com.blocktyper.spoileralert.resources.SpoilerAlertMessages";
-	
 
 	public void onEnable() {
 		super.onEnable();
-		new ExpirationListener(this);
+		registerListeners();
 		new SpoilDateCommand(this);
 		new SetDayCommand(this);
 		new HungerCommand(this);
-		
+
+	}
+
+	private void registerListeners() {
+		new BlockBreakListener(this);
+		new BlockPlaceListener(this);
+		new CakeListener(this);
+		new CraftListener(this);
+		new FoodEatListener(this);
+		new FurnaceListener(this);
+		new InventoryClickListener(this);
+		new PickupListener(this);
 	}
 
 	// begin localization
