@@ -1,6 +1,5 @@
 package com.blocktyper.spoileralert.listeners;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -37,15 +36,7 @@ public class InventoryClickListener extends SpoilerAlertListenerBase {
 			event.setCurrentItem(setExpirationDate(event.getCurrentItem(), player.getWorld(), null));
 		}
 
-		Long daysExpired = getDaysExpired(event.getCurrentItem(), player.getWorld());
-
-		if (daysExpired != null && daysExpired > 0) {
-			int lifeSpanInDays = getLifeSpanIndays(event.getCurrentItem().getType());
-			int buffMagnitude = getBuffMagnitude(daysExpired, lifeSpanInDays);
-
-			event.getWhoClicked()
-					.sendMessage(ChatColor.RED + "EXPIRED: " + daysExpired + " days! Danger level: " + buffMagnitude);
-		}
+		sendExpiredMessage(event.getCurrentItem(), player);
 	}
 
 }

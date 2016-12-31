@@ -46,11 +46,16 @@ public class CakeListener extends SpoilerAlertListenerBase {
 				event.getPlayer().sendMessage("This cake is not expired [" + expirationDate.getDisplayDate() + "].");
 			return;
 		}
-
-		event.getPlayer()
-				.sendMessage(ChatColor.RED + "This cake is expired [" + expirationDate.getDisplayDate() + "]!");
+		
+		sendExpiredMessage(daysSourceExpired, Material.CAKE, event.getPlayer());
 
 		if (!isEating) {
+			return;
+		}
+		
+		if(event.getPlayer().getFoodLevel() >= 20){
+			plugin.debugInfo("event.getPlayer().getFoodLevel() >= 20");
+			plugin.debugInfo("  -" + event.getPlayer().getFoodLevel());
 			return;
 		}
 

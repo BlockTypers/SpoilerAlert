@@ -24,6 +24,7 @@ spoileralert-decrease-saturation-enabled: true
 spoileralert-recipe-shelf-life: 
   - Candy Apple=21
   - Salted Beef=21
+  - Salted Pork=21
   
 spoileralert-shelf-life: 
   - APPLE=7
@@ -44,6 +45,7 @@ spoileralert-shelf-life:
   - COOKIE=14
   - CROPS=21
   - EGG=10
+  - GRILLED_PORK=7
   - MILK_BUCKET=14
   - MELON=7
   - MELON_BLOCK=7
@@ -70,6 +72,7 @@ recipes:
   - candy-apple
   - coarse-salt
   - salted-beef
+  - salted-pork
 
 
 ###############################################
@@ -117,6 +120,24 @@ recipe.salted-beef.mats:
   - S=SUGAR
 recipe.salted-beef.output: COOKED_BEEF
 recipe.salted-beef.item.starts.with: 
+  - 1=Coarse Salt
+  - 3=Coarse Salt
+  - 5=Coarse Salt
+  - 7=Coarse Salt
+  
+  
+  ################## BEGIN Salted Pork #################
+recipe.salted-pork.name: Salted Pork
+recipe.salted-pork.rows: 
+  - ASA
+  - SPS
+  - ASA
+recipe.salted-pork.mats: 
+  - A=AIR
+  - P=GRILLED_PORK
+  - S=SUGAR
+recipe.salted-pork.output: GRILLED_PORK
+recipe.salted-pork.item.starts.with: 
   - 1=Coarse Salt
   - 3=Coarse Salt
   - 5=Coarse Salt

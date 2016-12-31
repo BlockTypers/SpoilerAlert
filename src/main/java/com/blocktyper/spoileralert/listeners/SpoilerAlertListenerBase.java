@@ -186,7 +186,7 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 	}
 
 	/*
-	 * GET EXPIRATION DATE TEST
+	 * GET EXPIRATION DATE TEXT
 	 */
 	protected String getExpirationDateText(ItemStack itemStack) {
 		if (itemStack == null) {
@@ -351,6 +351,20 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 				player.addPotionEffect(
 						new PotionEffect(PotionEffectType.HARM, buffDuration.intValue() * 20, harmMagnifier));
 			}
+		}
+	}
+	
+	protected void sendExpiredMessage(ItemStack item, Player player){
+		Long daysExpired = getDaysExpired(item, player.getWorld());
+		sendExpiredMessage(daysExpired, item.getType(), player);
+	}
+	
+	protected void sendExpiredMessage(Long daysExpired, Material type, Player player){
+		if (daysExpired != null && daysExpired > 0) {
+			int lifeSpanInDays = getLifeSpanIndays(type);
+			int buffMagnitude = getBuffMagnitude(daysExpired, lifeSpanInDays);
+
+			player.sendMessage(ChatColor.RED + "EXPIRED: " + daysExpired + " days! Danger level: " + buffMagnitude);
 		}
 	}
 }
