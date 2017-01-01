@@ -25,6 +25,8 @@ spoileralert-recipe-shelf-life:
   - Candy Apple=21
   - Salted Beef=21
   - Salted Pork=21
+  - Salted Fish=21
+  - Salted Chicken=21
   
 spoileralert-shelf-life: 
   - APPLE=7
@@ -73,6 +75,8 @@ recipes:
   - coarse-salt
   - salted-beef
   - salted-pork
+  - salted-fish
+  - salted-chicken
 
 
 ###############################################
@@ -126,7 +130,7 @@ recipe.salted-beef.item.starts.with:
   - 7=Coarse Salt
   
   
-  ################## BEGIN Salted Pork #################
+################## BEGIN Salted Pork #################
 recipe.salted-pork.name: Salted Pork
 recipe.salted-pork.rows: 
   - ASA
@@ -142,7 +146,42 @@ recipe.salted-pork.item.starts.with:
   - 3=Coarse Salt
   - 5=Coarse Salt
   - 7=Coarse Salt
+  
+  
+################## BEGIN Salted Fish #################
+recipe.salted-fish.name: Salted Fish
+recipe.salted-fish.rows: 
+  - ASA
+  - SFS
+  - ASA
+recipe.salted-fish.mats: 
+  - A=AIR
+  - F=COOKED_FISH
+  - S=SUGAR
+recipe.salted-fish.output: COOKED_FISH
+recipe.salted-fish.item.starts.with: 
+  - 1=Coarse Salt
+  - 3=Coarse Salt
+  - 5=Coarse Salt
+  - 7=Coarse Salt
 
+
+################## BEGIN Salted Chicken #################
+recipe.salted-chicken.name: Salted Chicken
+recipe.salted-chicken.rows: 
+  - ASA
+  - SCS
+  - ASA
+recipe.salted-chicken.mats: 
+  - A=AIR
+  - C=COOKED_CHICKEN
+  - S=SUGAR
+recipe.salted-chicken.output: COOKED_CHICKEN
+recipe.salted-chicken.item.starts.with: 
+  - 1=Coarse Salt
+  - 3=Coarse Salt
+  - 5=Coarse Salt
+  - 7=Coarse Salt
 
 
 
