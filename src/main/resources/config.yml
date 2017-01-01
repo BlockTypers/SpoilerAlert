@@ -27,6 +27,7 @@ spoileralert-recipe-shelf-life:
   - Salted Pork=21
   - Salted Fish=21
   - Salted Chicken=21
+  - Salted Mutton=21
   
 spoileralert-shelf-life: 
   - APPLE=7
@@ -77,6 +78,7 @@ recipes:
   - salted-pork
   - salted-fish
   - salted-chicken
+  - salted-mutton
 
 
 ###############################################
@@ -184,7 +186,22 @@ recipe.salted-chicken.item.starts.with:
   - 7=Coarse Salt
 
 
-
+################## BEGIN Salted Mutton #################
+recipe.salted-mutton.name: Salted Mutton
+recipe.salted-mutton.rows: 
+  - ASA
+  - SMS
+  - ASA
+recipe.salted-mutton.mats: 
+  - A=AIR
+  - M=COOKED_MUTTON
+  - S=SUGAR
+recipe.salted-mutton.output: COOKED_MUTTON
+recipe.salted-mutton.item.starts.with: 
+  - 1=Coarse Salt
+  - 3=Coarse Salt
+  - 5=Coarse Salt
+  - 7=Coarse Salt
 
 
 
