@@ -8,6 +8,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import com.blocktyper.spoileralert.LocalizedMessageEnum;
 import com.blocktyper.spoileralert.SpoilerAlertCalendar;
 import com.blocktyper.spoileralert.SpoilerAlertPlugin;
 
@@ -33,8 +34,10 @@ public class CakeListener extends SpoilerAlertListenerBase {
 		SpoilerAlertCalendar expirationDate = getExistingExpirationDate(event.getClickedBlock());
 
 		if (expirationDate == null) {
+			String cakeHasNoExpirationDateText = plugin.getLocalizedMessage(LocalizedMessageEnum.CAKE_HAS_NO_EXPIRATION_DATE.getKey());
+			
 			if (!isEating)
-				event.getPlayer().sendMessage("This cake has no expiration date.");
+				event.getPlayer().sendMessage(cakeHasNoExpirationDateText);
 			return;
 		}
 		expirationDate.addDays(-1);
@@ -42,8 +45,9 @@ public class CakeListener extends SpoilerAlertListenerBase {
 		Long daysSourceExpired = getDaysExpired(expirationDate.getDisplayDate(), event.getClickedBlock().getWorld());
 
 		if (daysSourceExpired == null || daysSourceExpired < 1) {
+			String cakeNotExpiredText = plugin.getLocalizedMessage(LocalizedMessageEnum.CAKE_NOT_EXPIRED.getKey());
 			if (!isEating)
-				event.getPlayer().sendMessage("This cake is not expired [" + expirationDate.getDisplayDate() + "].");
+				event.getPlayer().sendMessage(cakeNotExpiredText + " [" + expirationDate.getDisplayDate() + "].");
 			return;
 		}
 		
@@ -59,8 +63,8 @@ public class CakeListener extends SpoilerAlertListenerBase {
 			return;
 		}
 
-		event.getPlayer()
-				.sendMessage(ChatColor.RED + "Next time hit the cake first to find out if it is still good to eat.");
+		String hitCakesFirstText = plugin.getLocalizedMessage(LocalizedMessageEnum.HIT_CAKES_FIRST.getKey());
+		event.getPlayer().sendMessage(ChatColor.RED + hitCakesFirstText);
 
 		ItemStack cakeItemStack = new ItemStack(Material.CAKE);
 		makePlayerSick(daysSourceExpired, cakeItemStack, event.getPlayer());

@@ -2,9 +2,11 @@ package com.blocktyper.spoileralert;
 
 public enum LocalizedMessageEnum {
 	
-	PERISHABLE("spoileralert.perishable"),
-	CREATED_DATE("spoileralert.created.date"),
-	EXPIRATION_DATE("spoileralert.expiration.date");
+	EXPIRED_MESSAGE("spoileralert.expired.message"),
+	EXPIRATION_DATE("spoileralert.expiration.date"),
+	CAKE_HAS_NO_EXPIRATION_DATE("spoileralert.cake.has.no.expiration.date"),
+	HIT_CAKES_FIRST("spoileralert.hit.cakes.first"),
+	CAKE_NOT_EXPIRED("spoileralert.cake.not.expired");
 
 
 	private String key;

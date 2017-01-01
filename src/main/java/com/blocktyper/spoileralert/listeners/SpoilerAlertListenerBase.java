@@ -1,11 +1,11 @@
 package com.blocktyper.spoileralert.listeners;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -73,15 +73,6 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 		if (daysExpired == null && (lifeSpan == null || !lifeSpan.isPresent())) {
 			plugin.debugInfo("[setExpirationDate] daysExpired == null && (lifeSpan == null || !lifeSpan.isPresent())");
 			return itemStack;
-		}
-
-		String perishableText = "[" + plugin.getLocalizedMessage(LocalizedMessageEnum.PERISHABLE.getKey()) + "]";
-
-		String displayname = itemMeta.getDisplayName() != null ? itemMeta.getDisplayName()
-				: WordUtils.capitalizeFully(itemStack.getType().name().replaceAll("_", " "));
-		if (!displayname.endsWith(perishableText)) {
-			itemMeta.setDisplayName(displayname + " " + ChatColor.RED + perishableText);
-			itemStack.setItemMeta(itemMeta);
 		}
 
 		String expirationDateText = "[" + plugin.getLocalizedMessage(LocalizedMessageEnum.EXPIRATION_DATE.getKey())
@@ -194,22 +185,8 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 		}
 
 		ItemMeta meta = itemStack.getItemMeta();
-		String perishableText = "[" + plugin.getLocalizedMessage(LocalizedMessageEnum.PERISHABLE.getKey()) + "]";
 
 		plugin.debugInfo("[getExpirationDateText] itemStack.getType().name(): " + itemStack.getType().name());
-
-		if (meta == null || meta.getDisplayName() == null || !meta.getDisplayName().endsWith(perishableText)) {
-			if (plugin.config().debugEnabled()) {
-				if (meta == null)
-					plugin.debugInfo("[getExpirationDateText] meta == null");
-				else if (meta.getDisplayName() == null)
-					plugin.debugInfo("[getExpirationDateText] meta.getDisplayName() == null");
-				else if (!meta.getDisplayName().endsWith(perishableText))
-					plugin.debugInfo("[getExpirationDateText] !meta.getDisplayName().endsWith(" + perishableText + ")");
-			}
-
-			return null;
-		}
 
 		if (meta.getLore() == null || meta.getLore().isEmpty()) {
 			plugin.debugInfo("[getExpirationDateText] meta.getLore() == null || meta.getLore().isEmpty()");
@@ -353,18 +330,22 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 			}
 		}
 	}
-	
-	protected void sendExpiredMessage(ItemStack item, Player player){
+
+	protected void sendExpiredMessage(ItemStack item, Player player) {
 		Long daysExpired = getDaysExpired(item, player.getWorld());
 		sendExpiredMessage(daysExpired, item.getType(), player);
 	}
-	
-	protected void sendExpiredMessage(Long daysExpired, Material type, Player player){
+
+	protected void sendExpiredMessage(Long daysExpired, Material type, Player player) {
 		if (daysExpired != null && daysExpired > 0) {
 			int lifeSpanInDays = getLifeSpanIndays(type);
 			int buffMagnitude = getBuffMagnitude(daysExpired, lifeSpanInDays);
 
-			player.sendMessage(ChatColor.RED + "EXPIRED: " + daysExpired + " days! Danger level: " + buffMagnitude);
+			String expiredMessage = plugin.getLocalizedMessage(LocalizedMessageEnum.EXPIRED_MESSAGE.getKey());
+			expiredMessage = new MessageFormat(expiredMessage)
+					.format(new Object[] { daysExpired + "", buffMagnitude + "" });
+
+			player.sendMessage(ChatColor.RED + expiredMessage);
 		}
 	}
 }

@@ -18,6 +18,10 @@ import com.blocktyper.spoileralert.listeners.CakeListener;
 public class SpoilerAlertPlugin extends BlockTyperPlugin {
 
 	public static final String RESOURCE_NAME = "com.blocktyper.spoileralert.resources.SpoilerAlertMessages";
+	
+	public SpoilerAlertPlugin() {
+		super();
+	}
 
 	public void onEnable() {
 		super.onEnable();
