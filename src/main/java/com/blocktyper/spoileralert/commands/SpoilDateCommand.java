@@ -5,6 +5,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.blocktyper.spoileralert.LocalizedMessageEnum;
 import com.blocktyper.spoileralert.SpoilerAlertCalendar;
 import com.blocktyper.spoileralert.SpoilerAlertPlugin;
 
@@ -25,11 +26,9 @@ public class SpoilDateCommand implements CommandExecutor {
 			if (!(sender instanceof Player)) {
 				return false;
 			}
-
 			Player player = (Player) sender;
-			
-			player.sendMessage("Date: " + new SpoilerAlertCalendar(player.getWorld()).getDisplayDate());
-
+			String message = plugin.getLocalizedMessage(LocalizedMessageEnum.DATE.getKey(), player);
+			player.sendMessage(message + ": " + new SpoilerAlertCalendar(player.getWorld()).getDisplayDate());
 		} catch (Exception e) {
 			plugin.warning("error running '" + label + "':  " + e.getMessage());
 			return false;

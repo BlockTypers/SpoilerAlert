@@ -10,6 +10,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.blocktyper.spoileralert.LocalizedMessageEnum;
 import com.blocktyper.spoileralert.SpoilerAlertCalendar;
 import com.blocktyper.spoileralert.SpoilerAlertPlugin;
 

@@ -341,7 +341,7 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 			int lifeSpanInDays = getLifeSpanIndays(type);
 			int buffMagnitude = getBuffMagnitude(daysExpired, lifeSpanInDays);
 
-			String expiredMessage = plugin.getLocalizedMessage(LocalizedMessageEnum.EXPIRED_MESSAGE.getKey());
+			String expiredMessage = plugin.getLocalizedMessage(LocalizedMessageEnum.EXPIRED_MESSAGE.getKey(), player);
 			expiredMessage = new MessageFormat(expiredMessage)
 					.format(new Object[] { daysExpired + "", buffMagnitude + "" });
 

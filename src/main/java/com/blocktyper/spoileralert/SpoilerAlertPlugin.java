@@ -1,5 +1,6 @@
 package com.blocktyper.spoileralert;
 
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import com.blocktyper.plugin.BlockTyperPlugin;
@@ -44,13 +45,9 @@ public class SpoilerAlertPlugin extends BlockTyperPlugin {
 	}
 
 	// begin localization
-	private ResourceBundle bundle = null;
-
-	public ResourceBundle getBundle() {
-		if (bundle == null)
-			bundle = ResourceBundle.getBundle(RESOURCE_NAME, locale);
-		return bundle;
+	@Override
+	public ResourceBundle getBundle(Locale locale) {
+		return ResourceBundle.getBundle(RESOURCE_NAME, locale);
 	}
-
 	// end localization
 }

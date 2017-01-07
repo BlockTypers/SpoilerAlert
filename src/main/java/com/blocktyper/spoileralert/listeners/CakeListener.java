@@ -34,7 +34,7 @@ public class CakeListener extends SpoilerAlertListenerBase {
 		SpoilerAlertCalendar expirationDate = getExistingExpirationDate(event.getClickedBlock());
 
 		if (expirationDate == null) {
-			String cakeHasNoExpirationDateText = plugin.getLocalizedMessage(LocalizedMessageEnum.CAKE_HAS_NO_EXPIRATION_DATE.getKey());
+			String cakeHasNoExpirationDateText = plugin.getLocalizedMessage(LocalizedMessageEnum.CAKE_HAS_NO_EXPIRATION_DATE.getKey(), event.getPlayer());
 			
 			if (!isEating)
 				event.getPlayer().sendMessage(cakeHasNoExpirationDateText);
@@ -45,7 +45,7 @@ public class CakeListener extends SpoilerAlertListenerBase {
 		Long daysSourceExpired = getDaysExpired(expirationDate.getDisplayDate(), event.getClickedBlock().getWorld());
 
 		if (daysSourceExpired == null || daysSourceExpired < 1) {
-			String cakeNotExpiredText = plugin.getLocalizedMessage(LocalizedMessageEnum.CAKE_NOT_EXPIRED.getKey());
+			String cakeNotExpiredText = plugin.getLocalizedMessage(LocalizedMessageEnum.CAKE_NOT_EXPIRED.getKey(), event.getPlayer());
 			if (!isEating)
 				event.getPlayer().sendMessage(cakeNotExpiredText + " [" + expirationDate.getDisplayDate() + "].");
 			return;
@@ -63,7 +63,7 @@ public class CakeListener extends SpoilerAlertListenerBase {
 			return;
 		}
 
-		String hitCakesFirstText = plugin.getLocalizedMessage(LocalizedMessageEnum.HIT_CAKES_FIRST.getKey());
+		String hitCakesFirstText = plugin.getLocalizedMessage(LocalizedMessageEnum.HIT_CAKES_FIRST.getKey(), event.getPlayer());
 		event.getPlayer().sendMessage(ChatColor.RED + hitCakesFirstText);
 
 		ItemStack cakeItemStack = new ItemStack(Material.CAKE);
