@@ -1,15 +1,22 @@
 package com.blocktyper.spoileralert.listeners;
 
 import java.text.MessageFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -17,6 +24,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import com.blocktyper.nbt.NBTItem;
 import com.blocktyper.spoileralert.ConfigKeyEnum;
 import com.blocktyper.spoileralert.LocalizedMessageEnum;
 import com.blocktyper.spoileralert.PerishableBlock;
@@ -28,8 +36,10 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 
 	public static final int DEFAULT_LIFE_SPAN_IN_DAYS = 7;
 	public static final String DATA_KEY_SPOILER_ALERT_PERISHABLE_BLOCKS = "DATA_KEY_SPOILER_ALERT_PERISHABLE_BLOCKS";
-	public static final String DATA_KEY_SPOILER_ALERT_PERISHABLE_BLOCKS_DIMENTION_MAP = "DATA_KEY_SPOILER_ALERT_PERISHABLE_BLOCKS_DIMENTION_MAP";
-
+	
+	public static final String NBT_SPOILER_ALERT_EXPIRATION_DATE = "SPOILER_ALERT_EXPIRATION_DATE";
+	public static final String INVISIBLE_PREFIX_SPOILER_ALERT_EXPIRATION_DATE = "SP_EXP#";
+	
 	protected static PerishableBlockRepo perishableBlockRepo;
 
 	protected SpoilerAlertPlugin plugin;
@@ -43,7 +53,12 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 	/*
 	 * SET EXPIRATION DATE
 	 */
-	protected ItemStack setExpirationDate(ItemStack itemStack, World world, Long daysExpired) {
+	
+	protected ItemStack setExpirationDate(ItemStack itemStack, World world, Long daysExpired, HumanEntity player){
+		return setExpirationDate(itemStack, world, daysExpired, player, false);
+	}
+	
+	protected ItemStack setExpirationDate(ItemStack itemStack, World world, Long daysExpired, HumanEntity player, boolean onlyIfItemHasExisitngNbtTag) {
 
 		if (itemStack == null) {
 			plugin.debugInfo("[setExpirationDate] itemStack == null");
@@ -74,57 +89,90 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 			plugin.debugInfo("[setExpirationDate] daysExpired == null && (lifeSpan == null || !lifeSpan.isPresent())");
 			return itemStack;
 		}
-
-		String expirationDateText = "[" + plugin.getLocalizedMessage(LocalizedMessageEnum.EXPIRATION_DATE.getKey())
-				+ "]";
-
-		boolean addLore = true;
-
+		
 		List<String> lore = itemMeta.getLore();
+		boolean addExpirationDate = true;
+		
+		NBTItem nbtItemForExistingCheck = new NBTItem(itemStack);
+		
+		if(!nbtItemForExistingCheck.hasKey(NBT_SPOILER_ALERT_EXPIRATION_DATE)){
+			addExpirationDate = true;
+			
+			//strip legacy lore
+			if (lore != null && !lore.isEmpty()) {
+				String legacyExpirationDateText = "[" + plugin.getLocalizedMessage(LocalizedMessageEnum.EXPIRATION_DATE.getKey()) + "]";
+				long existingLoreCount = lore.stream().filter(l -> l.contains(legacyExpirationDateText)).count();
 
-		if (lore != null && !lore.isEmpty()) {
-			plugin.debugInfo("[setExpirationDate] lore != null && !lore.isEmpty()");
-			long existingLoreCount = lore.stream().filter(l -> l.contains(expirationDateText)).count();
-
-			plugin.debugInfo("[setExpirationDate] existingLoreCount: " + existingLoreCount);
-			addLore = existingLoreCount < 1;
-			plugin.debugInfo("addLore: " + addLore);
-		} else {
-			plugin.debugInfo("[setExpirationDate] lore == null || lore.isEmpty()");
-		}
-
-		if (addLore) {
-
-			int days = 0;
-
-			if (daysExpired != null) {
-				plugin.debugInfo("[setExpirationDate] USING MANUAL daysExpired");
-				days = (daysExpired.intValue()) * -1;
-			} else {
-
-				plugin.debugInfo("[setExpirationDate] NOT USING MANUAL daysExpired");
-				String lifeSpanExpression = lifeSpan.get();
-				String daysString = lifeSpanExpression.substring(lifeSpanExpression.indexOf("=") + 1);
-				days = Integer.parseInt(daysString);
+				if(existingLoreCount > 0){
+					lore = lore.stream().filter(l -> !l.contains(legacyExpirationDateText)).collect(Collectors.toList());
+					itemMeta.setLore(lore);
+					itemStack.setItemMeta(itemMeta);
+				}
 			}
+		}
+		
+		//the method was only called to convert language of non-legacy perishables
+		//return the item.  We have stripped it of legacy lore however
+		if(addExpirationDate && onlyIfItemHasExisitngNbtTag)
+			return itemStack;
 
-			SpoilerAlertCalendar expirationDate = new SpoilerAlertCalendar(world);
-			expirationDate.addDays(days);
-			String text = ChatColor.RED + expirationDateText + ": (" + expirationDate.getDisplayDate() + ")";
-			if (lore == null)
-				lore = new ArrayList<>();
-			lore.add(text);
-			itemMeta.setLore(lore);
-			itemStack.setItemMeta(itemMeta);
+		if (addExpirationDate) {
+			return getItemWithNbtTagExpirationDate(player, itemStack, itemMeta, lore, daysExpired, lifeSpan.get());
+		}else{
+			//Language conversion
+			if (lore != null && !lore.isEmpty()) {
+				lore = lore.stream().filter(l -> !l.contains(INVISIBLE_PREFIX_SPOILER_ALERT_EXPIRATION_DATE)).collect(Collectors.toList());
+			}
+			return getItemWithNbtTagExpirationDate(player, itemStack, itemMeta, lore, daysExpired, lifeSpan.get());
+		}
+	}
+	
+	private ItemStack getItemWithNbtTagExpirationDate(HumanEntity player, ItemStack itemStack, ItemMeta itemMeta, List<String> lore, Long daysExpired, String lifeSpanExpression){
+		
+		int days = 0;
+
+		if (daysExpired != null) {
+			days = (daysExpired.intValue()) * -1;
+		} else {
+			String daysString = lifeSpanExpression.substring(lifeSpanExpression.indexOf("=") + 1);
+			days = Integer.parseInt(daysString);
 		}
 
-		return itemStack;
+		String expDateAsString = "";
+		
+		if(plugin.getConfig().getBoolean(ConfigKeyEnum.USE_REAL_DATES.getKey(), false)){
+			Calendar cal = new GregorianCalendar();
+			cal.setTime(new Date());
+			cal.add(Calendar.DAY_OF_YEAR, days);
+			expDateAsString = getStringfromDate(cal.getTime());
+		}else{
+			SpoilerAlertCalendar expirationDate = new SpoilerAlertCalendar(player.getWorld());
+			expirationDate.addDays(days);
+			expDateAsString = expirationDate.getDisplayDate();
+		}
+
+		if (lore == null)
+			lore = new ArrayList<>();
+		
+		String invis = INVISIBLE_PREFIX_SPOILER_ALERT_EXPIRATION_DATE;
+		String expirationDateText = plugin.getLocalizedMessage(LocalizedMessageEnum.EXPIRATION_DATE.getKey(), player);
+		
+		String loreFormat = "{0}[{1}]: ({2})";
+		String loreLine = new MessageFormat(loreFormat).format(new Object[]{invis, expirationDateText, expDateAsString});
+		
+		lore.add(loreLine);
+		itemMeta.setLore(lore);
+		itemStack.setItemMeta(itemMeta);
+		
+		NBTItem nbtItem = new NBTItem(itemStack);
+		nbtItem.setString(NBT_SPOILER_ALERT_EXPIRATION_DATE, expDateAsString);
+		return nbtItem.getItem();
 	}
 
 	/*
 	 * GET LIFESPAN
 	 */
-	protected int getLifeSpanIndays(Material material) {
+	protected int getLifeSpanIndays(Material material, HumanEntity player) {
 		Optional<String> lifeSpan = plugin.getConfig().getStringList(ConfigKeyEnum.LIFE_SPANS.getKey()).stream()
 				.filter(l -> l.startsWith(material.name())).findFirst();
 
@@ -150,66 +198,92 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 	/*
 	 * GET DAYS EXPIRED
 	 */
-	protected long getDaysExpiredZeroOutNulls(ItemStack itemStack, World world) {
-		Long daysExpired = getDaysExpired(itemStack, world);
+	protected long getDaysExpiredZeroOutNulls(ItemStack itemStack, World world, HumanEntity player) {
+		Long daysExpired = getDaysExpired(itemStack, world, player);
 		return daysExpired != null ? daysExpired : 0;
 	}
 
-	protected Long getDaysExpired(ItemStack itemStack, World world) {
-		String expirationString = getExpirationDateText(itemStack);
+	protected Long getDaysExpired(ItemStack itemStack, World world, HumanEntity player) {
+		String expirationString = getExpirationDateText(itemStack, player);
 		return getDaysExpired(expirationString, world);
 	}
 
+	private Calendar getRoundedCal(Date date){
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(date);
+		
+		int month = cal.get(Calendar.MONTH);
+		int day = cal.get(Calendar.DAY_OF_MONTH);
+		int year = cal.get(Calendar.YEAR);
+		
+		cal.clear();
+		cal.set(Calendar.MONTH, month);
+		cal.set(Calendar.DAY_OF_MONTH, day);
+		cal.set(Calendar.YEAR, year);
+		return cal;
+	}
+	
+	private Date getDateFromString(String dateString) throws ParseException{
+		String dateFormat = SpoilerAlertPlugin.CONFIG.getConfig().getString(ConfigKeyEnum.DATE_FORMAT.getKey(), "mm/dd/yyyy");
+		SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+		Date date = sdf.parse(dateString);
+		return date;
+	}
+	
+	private String getStringfromDate(Date date){
+		String dateFormat = SpoilerAlertPlugin.CONFIG.getConfig().getString(ConfigKeyEnum.DATE_FORMAT.getKey(), "mm/dd/yyyy");
+		SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+		String dateString= sdf.format(date);
+		return dateString;
+	}
+	
+	public int daysBetween(Date d1, Date d2){
+		return (int)( (d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
+	}
+	
 	protected Long getDaysExpired(String expirationString, World world) {
 
 		if (expirationString == null) {
 			return null;
 		}
+		
+		long daysExpired = 0;
+		
+		if(plugin.getConfig().getBoolean(ConfigKeyEnum.USE_REAL_DATES.getKey(), false)){
+			try {
+				Date expDate = getDateFromString(expirationString);
+				Calendar expCal = getRoundedCal(expDate);
+				Calendar nowCal = getRoundedCal(new Date());
+				daysExpired = daysBetween(nowCal.getTime(), expCal.getTime());
+			} catch (ParseException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}else{
+			SpoilerAlertCalendar expirationDate = SpoilerAlertCalendar.getSpoilersCalendarFromDateString(expirationString);
+			if(expirationDate == null)
+				return null;
+			
+			SpoilerAlertCalendar currentDate = new SpoilerAlertCalendar(world);
 
-		SpoilerAlertCalendar expirationDate = SpoilerAlertCalendar.getSpoilersCalendarFromDateString(expirationString);
-		SpoilerAlertCalendar currentDate = new SpoilerAlertCalendar(world);
+			daysExpired = currentDate.getDay() - (expirationDate.getDay() - 1);
 
-		long daysExpired = currentDate.getDay() - (expirationDate.getDay() - 1);
-
-		plugin.debugInfo((daysExpired > 0 ? "daysExpired: " : "daysUntilExpiration: ") + Math.abs(daysExpired));
-
+			plugin.debugInfo((daysExpired > 0 ? "daysExpired: " : "daysUntilExpiration: ") + Math.abs(daysExpired));
+		}
+		
 		return daysExpired;
 	}
 
 	/*
 	 * GET EXPIRATION DATE TEXT
 	 */
-	protected String getExpirationDateText(ItemStack itemStack) {
+	protected String getExpirationDateText(ItemStack itemStack, HumanEntity player) {
 		if (itemStack == null) {
 			return null;
 		}
-
-		ItemMeta meta = itemStack.getItemMeta();
-
-		plugin.debugInfo("[getExpirationDateText] itemStack.getType().name(): " + itemStack.getType().name());
-
-		if (meta.getLore() == null || meta.getLore().isEmpty()) {
-			plugin.debugInfo("[getExpirationDateText] meta.getLore() == null || meta.getLore().isEmpty()");
-			return null;
-		}
-
-		String expirationDateText = "[" + plugin.getLocalizedMessage(LocalizedMessageEnum.EXPIRATION_DATE.getKey())
-				+ "]";
-
-		Optional<String> expirationOptional = meta.getLore().stream().filter(l -> l.contains(expirationDateText))
-				.findFirst();
-
-		if (expirationOptional == null || !expirationOptional.isPresent()) {
-			plugin.debugInfo("[[getExpirationDateText] expirationOptional == null || !expirationOptional.isPresent()");
-			return null;
-		}
-
-		String expirationExpression = expirationOptional.get();
-
-		String expirationString = expirationExpression.substring(expirationExpression.indexOf("(") + 1,
-				expirationExpression.indexOf(")"));
-
-		return expirationString;
+		
+		NBTItem nbtItem = new NBTItem(itemStack);
+		return nbtItem.getString(NBT_SPOILER_ALERT_EXPIRATION_DATE);
 	}
 
 	protected void initPerishableBlockRepo() {
@@ -275,7 +349,7 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 		if (daysExpired == null || daysExpired < 1)
 			return;
 
-		int lifeSpanInDays = getLifeSpanIndays(item.getType());
+		int lifeSpanInDays = getLifeSpanIndays(item.getType(), player);
 
 		int buffMagnitude = getBuffMagnitude(daysExpired, lifeSpanInDays);
 
@@ -332,13 +406,13 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 	}
 
 	protected void sendExpiredMessage(ItemStack item, Player player) {
-		Long daysExpired = getDaysExpired(item, player.getWorld());
+		Long daysExpired = getDaysExpired(item, player.getWorld(), player);
 		sendExpiredMessage(daysExpired, item.getType(), player);
 	}
 
 	protected void sendExpiredMessage(Long daysExpired, Material type, Player player) {
 		if (daysExpired != null && daysExpired > 0) {
-			int lifeSpanInDays = getLifeSpanIndays(type);
+			int lifeSpanInDays = getLifeSpanIndays(type, player);
 			int buffMagnitude = getBuffMagnitude(daysExpired, lifeSpanInDays);
 
 			String expiredMessage = plugin.getLocalizedMessage(LocalizedMessageEnum.EXPIRED_MESSAGE.getKey(), player);

@@ -33,7 +33,10 @@ public class InventoryClickListener extends SpoilerAlertListenerBase {
 		Player player = ((Player) event.getWhoClicked());
 
 		if (plugin.getConfig().getBoolean(ConfigKeyEnum.SET_EXPIRATION_ON_INVENTORY_CLICK.getKey(), true)) {
-			event.setCurrentItem(setExpirationDate(event.getCurrentItem(), player.getWorld(), null));
+			event.setCurrentItem(setExpirationDate(event.getCurrentItem(), player.getWorld(), null, event.getWhoClicked()));
+		}else{
+			//for language conversion only
+			event.setCurrentItem(setExpirationDate(event.getCurrentItem(), player.getWorld(), null, event.getWhoClicked(), true));
 		}
 
 		sendExpiredMessage(event.getCurrentItem(), player);

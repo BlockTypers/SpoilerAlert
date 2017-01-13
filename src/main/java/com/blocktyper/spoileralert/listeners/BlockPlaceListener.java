@@ -37,7 +37,7 @@ public class BlockPlaceListener extends SpoilerAlertListenerBase {
 			return;
 		}
 
-		String expirationString = getExpirationDateText(itemInHand);
+		String expirationString = getExpirationDateText(itemInHand, event.getPlayer());
 
 		if (expirationString == null) {
 			return;

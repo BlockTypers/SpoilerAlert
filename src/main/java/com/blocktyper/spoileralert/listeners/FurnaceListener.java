@@ -33,9 +33,9 @@ public class FurnaceListener extends SpoilerAlertListenerBase {
 
 		// if the food is not expired set daysSourceExpired to null in case it
 		// is 0, we want setExpirationDate() to ignore it
-		Long daysSourceExpired = getDaysExpired(event.getSource(), world);
+		Long daysSourceExpired = getDaysExpired(event.getSource(), world, null);
 		daysSourceExpired = daysSourceExpired == null || daysSourceExpired < 1 ? null : daysSourceExpired;
 
-		event.setResult(setExpirationDate(result, world, daysSourceExpired));
+		event.setResult(setExpirationDate(result, world, daysSourceExpired, null));
 	}
 }

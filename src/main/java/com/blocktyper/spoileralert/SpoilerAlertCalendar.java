@@ -1,5 +1,11 @@
 package com.blocktyper.spoileralert;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 import org.bukkit.World;
 
 public class SpoilerAlertCalendar {
@@ -89,19 +95,32 @@ public class SpoilerAlertCalendar {
 	}
 
 	public static SpoilerAlertCalendar getSpoilersCalendarFromDateString(String dateString){
-		String monthString = dateString.substring(0, dateString.indexOf("/"));
-		String dayString = dateString.substring(dateString.indexOf("/") + 1, dateString.lastIndexOf("/"));
-		String yearString = dateString.substring(dateString.lastIndexOf("/") + 1);
 		
-		long month = Long.valueOf(monthString)-1;
-		long day = Long.valueOf(dayString);
-		long year = Long.valueOf(yearString)-1;
+		try {
+			String dateFormat = SpoilerAlertPlugin.CONFIG.getConfig().getString(ConfigKeyEnum.DATE_FORMAT.getKey(), "mm/dd/yyyy");
+			SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+			Date date = sdf.parse(dateString);
+			
+			Calendar cal = new GregorianCalendar();
+			cal.setTime(date);
+			
+			int month = cal.get(Calendar.MONTH) - 1;
+			int day = cal.get(Calendar.DAY_OF_MONTH);
+			int year = cal.get(Calendar.YEAR) - 1;
+			
+			long fullTime = (year*MONTHS_PER_YEAR*DAYS_PER_MONTH*TICKS_IN_A_DAY) + (month*DAYS_PER_MONTH*TICKS_IN_A_DAY) + (day*TICKS_IN_A_DAY);
+			
+			SpoilerAlertCalendar spoilerAlertCalendar = new SpoilerAlertCalendar(fullTime);
+			
+			return spoilerAlertCalendar;
+			
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
 		
-		long fullTime = (year*MONTHS_PER_YEAR*DAYS_PER_MONTH*TICKS_IN_A_DAY) + (month*DAYS_PER_MONTH*TICKS_IN_A_DAY) + (day*TICKS_IN_A_DAY);
 		
-		SpoilerAlertCalendar spoilersCalendar = new SpoilerAlertCalendar(fullTime);
-		
-		return spoilersCalendar;
+		return null;
 	}
 
 }

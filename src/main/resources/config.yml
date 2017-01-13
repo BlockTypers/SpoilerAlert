@@ -11,6 +11,9 @@ log.recipes.enable: false
 
 spoileralert-set-expiration-on-inventory-click: true
 
+spoileralert-date-format: mm/dd/yyyy
+spoileralert-use-real-dates: false
+
 spoileralert-base-debuf-duration-in-seconds: 30
 
 spoileralert-blinding-enabled: true

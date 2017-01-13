@@ -3,6 +3,7 @@ package com.blocktyper.spoileralert;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import com.blocktyper.config.BlockTyperConfig;
 import com.blocktyper.plugin.BlockTyperPlugin;
 import com.blocktyper.spoileralert.commands.HungerCommand;
 import com.blocktyper.spoileralert.commands.SetDayCommand;
@@ -18,6 +19,7 @@ import com.blocktyper.spoileralert.listeners.CakeListener;
 
 public class SpoilerAlertPlugin extends BlockTyperPlugin {
 
+	public static BlockTyperConfig CONFIG;
 	public static final String RESOURCE_NAME = "com.blocktyper.spoileralert.resources.SpoilerAlertMessages";
 	
 	public SpoilerAlertPlugin() {
@@ -25,6 +27,7 @@ public class SpoilerAlertPlugin extends BlockTyperPlugin {
 	}
 
 	public void onEnable() {
+		CONFIG = config();
 		super.onEnable();
 		registerListeners();
 		new SpoilDateCommand(this);

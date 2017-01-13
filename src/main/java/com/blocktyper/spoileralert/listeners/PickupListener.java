@@ -29,7 +29,7 @@ public class PickupListener extends SpoilerAlertListenerBase {
 			return;
 		}
 
-		item.setItemStack(setExpirationDate(item.getItemStack(), item.getWorld(), null));
+		item.setItemStack(setExpirationDate(item.getItemStack(), item.getWorld(), null, event.getPlayer()));
 	}
 	
 }

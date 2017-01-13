@@ -37,7 +37,7 @@ public class BlockBreakListener extends SpoilerAlertListenerBase {
 			plugin.debugInfo("[onBlockBreakEvent] daysSourceExpired: " + (daysSourceExpired != null ? daysSourceExpired : "null"));
 			
 			for (ItemStack drop : drops) {
-				ItemStack newDrop = setExpirationDate(drop, event.getBlock().getWorld(), daysSourceExpired);
+				ItemStack newDrop = setExpirationDate(drop, event.getBlock().getWorld(), daysSourceExpired, event.getPlayer());
 				event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), newDrop);
 			}
 			

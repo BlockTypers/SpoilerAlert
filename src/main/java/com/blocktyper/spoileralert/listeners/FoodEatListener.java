@@ -18,7 +18,7 @@ public class FoodEatListener extends SpoilerAlertListenerBase {
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = false)
 	public void onFoodEat(PlayerItemConsumeEvent event) {
 
-		Long daysExpired = getDaysExpired(event.getItem(), event.getPlayer().getWorld());
+		Long daysExpired = getDaysExpired(event.getItem(), event.getPlayer().getWorld(), event.getPlayer());
 
 		if (daysExpired == null || daysExpired < 1)
 			return;
