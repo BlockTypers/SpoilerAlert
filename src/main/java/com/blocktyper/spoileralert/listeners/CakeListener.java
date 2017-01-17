@@ -25,7 +25,6 @@ public class CakeListener extends SpoilerAlertListenerBase {
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		if (!event.getClickedBlock().getType().equals(Material.CAKE_BLOCK)) {
-			plugin.debugInfo("[onPlayerInteract] NOT CAKE");
 			return;
 		}
 
@@ -42,12 +41,12 @@ public class CakeListener extends SpoilerAlertListenerBase {
 		}
 		expirationDate.addDays(-1);
 
-		Long daysSourceExpired = getDaysExpired(expirationDate.getDisplayDate(), event.getClickedBlock().getWorld());
+		Long daysSourceExpired = getDaysExpired(expirationDate.getNbtDateString(), event.getClickedBlock().getWorld());
 
 		if (daysSourceExpired == null || daysSourceExpired < 1) {
 			String cakeNotExpiredText = plugin.getLocalizedMessage(LocalizedMessageEnum.CAKE_NOT_EXPIRED.getKey(), event.getPlayer());
 			if (!isEating)
-				event.getPlayer().sendMessage(cakeNotExpiredText + " [" + expirationDate.getDisplayDate() + "].");
+				event.getPlayer().sendMessage(cakeNotExpiredText + " [" + expirationDate.getDateString(event.getPlayer(), plugin) + "].");
 			return;
 		}
 		
@@ -58,7 +57,6 @@ public class CakeListener extends SpoilerAlertListenerBase {
 		}
 		
 		if(event.getPlayer().getFoodLevel() >= 20){
-			plugin.debugInfo("event.getPlayer().getFoodLevel() >= 20");
 			plugin.debugInfo("  -" + event.getPlayer().getFoodLevel());
 			return;
 		}

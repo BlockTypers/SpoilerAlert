@@ -9,9 +9,6 @@ locale: en
 debug: false
 log.recipes.enable: false
 
-spoileralert-set-expiration-on-inventory-click: true
-
-spoileralert-date-format: mm/dd/yyyy
 spoileralert-use-real-dates: false
 
 spoileralert-base-debuf-duration-in-seconds: 30
@@ -25,13 +22,17 @@ spoileralert-age-before-harm-as-proportion-of-shelf-life: 3
 spoileralert-decrease-food-level-enabled: true
 spoileralert-decrease-saturation-enabled: true
 
+spoileralert-date-format.en_us: M/d/yyyy
+spoileralert-date-format.zh_cn: yyyy-mm-dd
+spoileralert-date-format.de: yyyy-mm-dd
+
 spoileralert-recipe-shelf-life: 
-  - Candy Apple=21
-  - Salted Beef=21
-  - Salted Pork=21
-  - Salted Fish=21
-  - Salted Chicken=21
-  - Salted Mutton=21
+  - candy-apple=21
+  - salted-beef=21
+  - salted-pork=21
+  - salted-fish=21
+  - salted-chicken=21
+  - salted-mutton=21
   
 spoileralert-shelf-life: 
   - APPLE=7
@@ -89,9 +90,19 @@ recipes:
 #################### RECIPES ##################
 ###############################################
 
+recipes-settings.continuous-translation: true
 
 ################## BEGIN Candy Apple ############
 recipe.candy-apple.name: Candy Apple
+recipe.candy-apple.de.name: Karamell Apfel
+recipe.candy-apple.fr.name: Pomme confite
+recipe.candy-apple.es.name: Manzana de caramelo
+recipe.candy-apple.vi.name: táo kẹo
+recipe.candy-apple.locales:
+  - de
+  - fr
+  - es
+  - vi
 recipe.candy-apple.rows: 
   - RSR
   - SAS
@@ -106,6 +117,15 @@ recipe.candy-apple.output: APPLE
 
 ################## BEGIN Coarse Salt #################
 recipe.coarse-salt.name: Coarse Salt
+recipe.coarse-salt.de.name: grobem Salz
+recipe.coarse-salt.fr.name: gros sel
+recipe.coarse-salt.es.name: sal gruesa
+recipe.coarse-salt.vi.name: Muối thô
+recipe.coarse-salt.locales: 
+  - de
+  - fr
+  - es
+  - vi
 recipe.coarse-salt.rows: 
   - AWA
   - ACA
@@ -120,6 +140,15 @@ recipe.coarse-salt.amount: 4
 
 ################## BEGIN Salted Beef #################
 recipe.salted-beef.name: Salted Beef
+recipe.salted.de.name: gesalzen Rindfleisch
+recipe.salted-beef.fr.name: boeuf salé
+recipe.salted-beef.es.name: Carne de vaca salada
+recipe.salted-beef.vi.name: thịt bò ướp muối
+recipe.salted-beef.locales: 
+  - de
+  - fr
+  - es
+  - vi
 recipe.salted-beef.rows: 
   - ASA
   - SBS
@@ -129,15 +158,24 @@ recipe.salted-beef.mats:
   - B=COOKED_BEEF
   - S=SUGAR
 recipe.salted-beef.output: COOKED_BEEF
-recipe.salted-beef.item.starts.with: 
-  - 1=Coarse Salt
-  - 3=Coarse Salt
-  - 5=Coarse Salt
-  - 7=Coarse Salt
+recipe.salted-beef.item-has-nbt-key: 
+  - 1=coarse-salt
+  - 3=coarse-salt
+  - 5=coarse-salt
+  - 7=coarse-salt
   
   
 ################## BEGIN Salted Pork #################
 recipe.salted-pork.name: Salted Pork
+recipe.salted-pork.de.name: gesalzen Schweinefleisch
+recipe.salted-pork.fr.name: porc salé
+recipe.salted-pork.es.name: Carne de cerdo salada
+recipe.salted-pork.vi.name: Thịt lợn muối
+recipe.salted-pork.locales: 
+  - de
+  - fr
+  - es
+  - vi
 recipe.salted-pork.rows: 
   - ASA
   - SPS
@@ -147,15 +185,24 @@ recipe.salted-pork.mats:
   - P=GRILLED_PORK
   - S=SUGAR
 recipe.salted-pork.output: GRILLED_PORK
-recipe.salted-pork.item.starts.with: 
-  - 1=Coarse Salt
-  - 3=Coarse Salt
-  - 5=Coarse Salt
-  - 7=Coarse Salt
+recipe.salted-pork.item-has-nbt-key: 
+  - 1=coarse-salt
+  - 3=coarse-salt
+  - 5=coarse-salt
+  - 7=coarse-salt
   
   
 ################## BEGIN Salted Fish #################
 recipe.salted-fish.name: Salted Fish
+recipe.salted-fish.de.name: gesalzene Fische
+recipe.salted-fish.fr.name: Le poisson salé
+recipe.salted-fish.es.name: pescado salado
+recipe.salted-fish.vi.name: Cá ướp muối
+recipe.salted-fish.locales: 
+  - de
+  - fr
+  - es
+  - vi
 recipe.salted-fish.rows: 
   - ASA
   - SFS
@@ -165,15 +212,24 @@ recipe.salted-fish.mats:
   - F=COOKED_FISH
   - S=SUGAR
 recipe.salted-fish.output: COOKED_FISH
-recipe.salted-fish.item.starts.with: 
-  - 1=Coarse Salt
-  - 3=Coarse Salt
-  - 5=Coarse Salt
-  - 7=Coarse Salt
+recipe.salted-fish.item-has-nbt-key: 
+  - 1=coarse-salt
+  - 3=coarse-salt
+  - 5=coarse-salt
+  - 7=coarse-salt
 
 
 ################## BEGIN Salted Chicken #################
 recipe.salted-chicken.name: Salted Chicken
+recipe.salted-chicken.de.name: gesalzene Hühner
+recipe.salted-chicken.fr.name: poulet salé
+recipe.salted-chicken.es.name: pollo salado
+recipe.salted-chicken.vi.name: gà muối
+recipe.salted-chicken.locales: 
+  - de
+  - fr
+  - es
+  - vi
 recipe.salted-chicken.rows: 
   - ASA
   - SCS
@@ -183,15 +239,24 @@ recipe.salted-chicken.mats:
   - C=COOKED_CHICKEN
   - S=SUGAR
 recipe.salted-chicken.output: COOKED_CHICKEN
-recipe.salted-chicken.item.starts.with: 
-  - 1=Coarse Salt
-  - 3=Coarse Salt
-  - 5=Coarse Salt
-  - 7=Coarse Salt
+recipe.salted-chicken.item-has-nbt-key: 
+  - 1=coarse-salt
+  - 3=coarse-salt
+  - 5=coarse-salt
+  - 7=coarse-salt
 
 
 ################## BEGIN Salted Mutton #################
 recipe.salted-mutton.name: Salted Mutton
+recipe.salted-mutton.de.name: gesalzen Hammel
+recipe.salted-mutton.fr.name: salé Mouton
+recipe.salted-mutton.es.name: salado cordero
+recipe.salted-mutton.vi.name: muối Thịt cừu
+recipe.salted-mutton.locales: 
+  - de
+  - fr
+  - es
+  - vi
 recipe.salted-mutton.rows: 
   - ASA
   - SMS
@@ -201,16 +266,29 @@ recipe.salted-mutton.mats:
   - M=COOKED_MUTTON
   - S=SUGAR
 recipe.salted-mutton.output: COOKED_MUTTON
-recipe.salted-mutton.item.starts.with: 
-  - 1=Coarse Salt
-  - 3=Coarse Salt
-  - 5=Coarse Salt
-  - 7=Coarse Salt
+recipe.salted-mutton.item-has-nbt-key: 
+  - 1=coarse-salt
+  - 3=coarse-salt
+  - 5=coarse-salt
+  - 7=coarse-salt
 
 
 
+messages.spoileralert-perishable.fallback: Perishable
+messages.spoileralert-expiration-date.fallback: Expiration Ddate
+messages.spoileralert-cake-has-no-expiration-date.fallback: This cake has no expiration date.
+messages.spoileralert-cake-not-expired.fallback: This cake is not expired.
+messages.spoileralert-hit-cakes-first.fallback: Next time hit the cake first to find out if it is still good to eat.
+messages.spoileralert-expired-message.fallback: EXPIRED {0} days- Danger level {1}
+messages.spoileralert-date.fallback: Date
 
-
+messages.spoileralert-perishable.de: Leichtverderblich
+messages.spoileralert-expiration-date.de: Verfallsdatum
+messages.spoileralert-cake-has-no-expiration-date.de: Dieser Kuchen hat kein Verfallsdatum.
+messages.spoileralert-cake-not-expired.de: Dieser Kuchen ist nicht verdorben-
+messages.spoileralert-hit-cakes-first.de: Nächstes Mal traf den Kuchen zuerst, um herauszufinden, ob es noch gut zu essen ist.
+messages.spoileralert-expired-message.de: Verdorben {0} Tage- Gefahrenstufe {1}
+messages.spoileralert-date.de: Datum
 
 
 

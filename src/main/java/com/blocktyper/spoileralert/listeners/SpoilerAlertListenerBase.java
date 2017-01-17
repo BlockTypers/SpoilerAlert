@@ -24,6 +24,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import com.blocktyper.helpers.InvisibleLoreHelper;
 import com.blocktyper.nbt.NBTItem;
 import com.blocktyper.spoileralert.ConfigKeyEnum;
 import com.blocktyper.spoileralert.LocalizedMessageEnum;
@@ -36,10 +37,10 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 
 	public static final int DEFAULT_LIFE_SPAN_IN_DAYS = 7;
 	public static final String DATA_KEY_SPOILER_ALERT_PERISHABLE_BLOCKS = "DATA_KEY_SPOILER_ALERT_PERISHABLE_BLOCKS";
-	
+
 	public static final String NBT_SPOILER_ALERT_EXPIRATION_DATE = "SPOILER_ALERT_EXPIRATION_DATE";
 	public static final String INVISIBLE_PREFIX_SPOILER_ALERT_EXPIRATION_DATE = "SP_EXP#";
-	
+
 	protected static PerishableBlockRepo perishableBlockRepo;
 
 	protected SpoilerAlertPlugin plugin;
@@ -53,12 +54,8 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 	/*
 	 * SET EXPIRATION DATE
 	 */
-	
-	protected ItemStack setExpirationDate(ItemStack itemStack, World world, Long daysExpired, HumanEntity player){
-		return setExpirationDate(itemStack, world, daysExpired, player, false);
-	}
-	
-	protected ItemStack setExpirationDate(ItemStack itemStack, World world, Long daysExpired, HumanEntity player, boolean onlyIfItemHasExisitngNbtTag) {
+
+	protected ItemStack setExpirationDate(ItemStack itemStack, World world, Long daysExpired, HumanEntity player) {
 
 		if (itemStack == null) {
 			plugin.debugInfo("[setExpirationDate] itemStack == null");
@@ -69,11 +66,12 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 
 		Optional<String> lifeSpan = null;
 
-		if (itemStack.getItemMeta() != null && itemStack.getItemMeta().getDisplayName() != null) {
-			plugin.debugInfo("[setExpirationDate] checking recipe shelf-lives: "
-					+ itemStack.getItemMeta().getDisplayName() + ")");
+		NBTItem nbtItemForExistingCheck = new NBTItem(itemStack);
+
+		if (nbtItemForExistingCheck.hasKey(SpoilerAlertPlugin.RECIPES_KEY)) {
 			lifeSpan = plugin.getConfig().getStringList(ConfigKeyEnum.RECIPE_LIFE_SPANS.getKey()).stream()
-					.filter(l -> l.startsWith(itemStack.getItemMeta().getDisplayName())).findFirst();
+					.filter(l -> l.contains(nbtItemForExistingCheck.getString(SpoilerAlertPlugin.RECIPES_KEY)))
+					.findFirst();
 		}
 
 		if (lifeSpan == null || !lifeSpan.isPresent() || lifeSpan.get() == null) {
@@ -89,46 +87,57 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 			plugin.debugInfo("[setExpirationDate] daysExpired == null && (lifeSpan == null || !lifeSpan.isPresent())");
 			return itemStack;
 		}
-		
+
 		List<String> lore = itemMeta.getLore();
-		boolean addExpirationDate = true;
-		
-		NBTItem nbtItemForExistingCheck = new NBTItem(itemStack);
-		
-		if(!nbtItemForExistingCheck.hasKey(NBT_SPOILER_ALERT_EXPIRATION_DATE)){
-			addExpirationDate = true;
-			
-			//strip legacy lore
+
+		if (!nbtItemForExistingCheck.hasKey(NBT_SPOILER_ALERT_EXPIRATION_DATE)) {
+
+			// strip legacy lore
 			if (lore != null && !lore.isEmpty()) {
-				String legacyExpirationDateText = "[" + plugin.getLocalizedMessage(LocalizedMessageEnum.EXPIRATION_DATE.getKey()) + "]";
+				String legacyExpirationDateText = "["
+						+ plugin.getLocalizedMessage(LocalizedMessageEnum.EXPIRATION_DATE.getKey()) + "]";
 				long existingLoreCount = lore.stream().filter(l -> l.contains(legacyExpirationDateText)).count();
 
-				if(existingLoreCount > 0){
-					lore = lore.stream().filter(l -> !l.contains(legacyExpirationDateText)).collect(Collectors.toList());
+				if (existingLoreCount > 0) {
+					lore = lore.stream().filter(l -> !l.contains(legacyExpirationDateText))
+							.collect(Collectors.toList());
 					itemMeta.setLore(lore);
 					itemStack.setItemMeta(itemMeta);
 				}
 			}
-		}
-		
-		//the method was only called to convert language of non-legacy perishables
-		//return the item.  We have stripped it of legacy lore however
-		if(addExpirationDate && onlyIfItemHasExisitngNbtTag)
-			return itemStack;
 
-		if (addExpirationDate) {
-			return getItemWithNbtTagExpirationDate(player, itemStack, itemMeta, lore, daysExpired, lifeSpan.get());
-		}else{
-			//Language conversion
-			if (lore != null && !lore.isEmpty()) {
-				lore = lore.stream().filter(l -> !l.contains(INVISIBLE_PREFIX_SPOILER_ALERT_EXPIRATION_DATE)).collect(Collectors.toList());
-			}
 			return getItemWithNbtTagExpirationDate(player, itemStack, itemMeta, lore, daysExpired, lifeSpan.get());
 		}
+
+		// Language conversion
+		if (lore != null && !lore.isEmpty()) {
+			lore = lore.stream().filter(l -> !loreLineContainsInvisExpirationDatePrefix(l))
+					.collect(Collectors.toList());
+		}
+		if (lore == null)
+			lore = new ArrayList<>();
+
+		try {
+			Date existingExpirationDate = getDateFromNbtString(
+					nbtItemForExistingCheck.getString(NBT_SPOILER_ALERT_EXPIRATION_DATE));
+			lore.add(getExpirationDateLoreLine(player, getStringfromDate(existingExpirationDate, player)));
+			itemMeta.setLore(lore);
+			itemStack.setItemMeta(itemMeta);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		return itemStack;
 	}
-	
-	private ItemStack getItemWithNbtTagExpirationDate(HumanEntity player, ItemStack itemStack, ItemMeta itemMeta, List<String> lore, Long daysExpired, String lifeSpanExpression){
-		
+
+	private boolean loreLineContainsInvisExpirationDatePrefix(String loreLine) {
+		return loreLine != null && InvisibleLoreHelper.convertToVisibleString(loreLine)
+				.contains(INVISIBLE_PREFIX_SPOILER_ALERT_EXPIRATION_DATE);
+	}
+
+	private ItemStack getItemWithNbtTagExpirationDate(HumanEntity player, ItemStack itemStack, ItemMeta itemMeta,
+			List<String> lore, Long daysExpired, String lifeSpanExpression) {
+
 		int days = 0;
 
 		if (daysExpired != null) {
@@ -138,35 +147,42 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 			days = Integer.parseInt(daysString);
 		}
 
-		String expDateAsString = "";
-		
-		if(plugin.getConfig().getBoolean(ConfigKeyEnum.USE_REAL_DATES.getKey(), false)){
+		String expDateAsNbtString = "";
+		String formattedDateString = "";
+
+		if (plugin.getConfig().getBoolean(ConfigKeyEnum.USE_REAL_DATES.getKey(), false)) {
 			Calendar cal = new GregorianCalendar();
 			cal.setTime(new Date());
 			cal.add(Calendar.DAY_OF_YEAR, days);
-			expDateAsString = getStringfromDate(cal.getTime());
-		}else{
+			Date calDate = cal.getTime();
+			expDateAsNbtString = getNbtStringfromDate(calDate);
+			formattedDateString = getStringfromDate(calDate, player);
+		} else {
 			SpoilerAlertCalendar expirationDate = new SpoilerAlertCalendar(player.getWorld());
 			expirationDate.addDays(days);
-			expDateAsString = expirationDate.getDisplayDate();
+			expDateAsNbtString = expirationDate.getNbtDateString();
+			formattedDateString = expirationDate.getDateString(player, plugin);
 		}
 
 		if (lore == null)
 			lore = new ArrayList<>();
-		
-		String invis = INVISIBLE_PREFIX_SPOILER_ALERT_EXPIRATION_DATE;
-		String expirationDateText = plugin.getLocalizedMessage(LocalizedMessageEnum.EXPIRATION_DATE.getKey(), player);
-		
-		String loreFormat = "{0}[{1}]: ({2})";
-		String loreLine = new MessageFormat(loreFormat).format(new Object[]{invis, expirationDateText, expDateAsString});
-		
-		lore.add(loreLine);
+
+		lore.add(getExpirationDateLoreLine(player, formattedDateString));
 		itemMeta.setLore(lore);
 		itemStack.setItemMeta(itemMeta);
-		
+
 		NBTItem nbtItem = new NBTItem(itemStack);
-		nbtItem.setString(NBT_SPOILER_ALERT_EXPIRATION_DATE, expDateAsString);
+		nbtItem.setString(NBT_SPOILER_ALERT_EXPIRATION_DATE, expDateAsNbtString);
 		return nbtItem.getItem();
+	}
+
+	private String getExpirationDateLoreLine(HumanEntity player, String formattedDateString) {
+		String invis = InvisibleLoreHelper.convertToInvisibleString(INVISIBLE_PREFIX_SPOILER_ALERT_EXPIRATION_DATE);
+		String expirationDateText = plugin.getLocalizedMessage(LocalizedMessageEnum.EXPIRATION_DATE.getKey(), player);
+		String loreFormat = "{0}[{1}]: ({2})";
+		String loreLine = new MessageFormat(loreFormat)
+				.format(new Object[] { invis, expirationDateText, formattedDateString });
+		return loreLine;
 	}
 
 	/*
@@ -208,69 +224,77 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 		return getDaysExpired(expirationString, world);
 	}
 
-	private Calendar getRoundedCal(Date date){
+	private Calendar getRoundedCal(Date date) {
 		Calendar cal = new GregorianCalendar();
 		cal.setTime(date);
-		
+
 		int month = cal.get(Calendar.MONTH);
 		int day = cal.get(Calendar.DAY_OF_MONTH);
 		int year = cal.get(Calendar.YEAR);
-		
+
 		cal.clear();
 		cal.set(Calendar.MONTH, month);
 		cal.set(Calendar.DAY_OF_MONTH, day);
 		cal.set(Calendar.YEAR, year);
 		return cal;
 	}
-	
-	private Date getDateFromString(String dateString) throws ParseException{
-		String dateFormat = SpoilerAlertPlugin.CONFIG.getConfig().getString(ConfigKeyEnum.DATE_FORMAT.getKey(), "mm/dd/yyyy");
+
+	private Date getDateFromNbtString(String dateString) throws ParseException {
+		String dateFormat = SpoilerAlertPlugin.NBT_DATE_FORMAT;
 		SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
 		Date date = sdf.parse(dateString);
 		return date;
 	}
-	
-	private String getStringfromDate(Date date){
-		String dateFormat = SpoilerAlertPlugin.CONFIG.getConfig().getString(ConfigKeyEnum.DATE_FORMAT.getKey(), "mm/dd/yyyy");
+
+	private String getNbtStringfromDate(Date date) {
+		String dateFormat = SpoilerAlertPlugin.NBT_DATE_FORMAT;
 		SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
-		String dateString= sdf.format(date);
+		String dateString = sdf.format(date);
 		return dateString;
 	}
-	
-	public int daysBetween(Date d1, Date d2){
-		return (int)( (d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
+
+	private String getStringfromDate(Date date, HumanEntity player) {
+		String dateFormat = plugin.getPlayerDateFormat(player);
+		SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+		String dateString = sdf.format(date);
+		return dateString;
 	}
-	
+
+	public int daysBetween(Date d1, Date d2) {
+		return (int) ((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
+	}
+
 	protected Long getDaysExpired(String expirationString, World world) {
 
 		if (expirationString == null) {
 			return null;
 		}
-		
+
 		long daysExpired = 0;
-		
-		if(plugin.getConfig().getBoolean(ConfigKeyEnum.USE_REAL_DATES.getKey(), false)){
+
+		if (plugin.getConfig().getBoolean(ConfigKeyEnum.USE_REAL_DATES.getKey(), false)) {
 			try {
-				Date expDate = getDateFromString(expirationString);
+				Date expDate = getDateFromNbtString(expirationString);
 				Calendar expCal = getRoundedCal(expDate);
 				Calendar nowCal = getRoundedCal(new Date());
-				daysExpired = daysBetween(nowCal.getTime(), expCal.getTime());
+				daysExpired = daysBetween(expCal.getTime(), nowCal.getTime());
 			} catch (ParseException e) {
 				e.printStackTrace();
 				return null;
 			}
-		}else{
-			SpoilerAlertCalendar expirationDate = SpoilerAlertCalendar.getSpoilersCalendarFromDateString(expirationString);
-			if(expirationDate == null)
+		} else {
+			SpoilerAlertCalendar expirationDate = SpoilerAlertCalendar
+					.getSpoilersCalendarFromDateString(expirationString);
+			if (expirationDate == null)
 				return null;
-			
+
 			SpoilerAlertCalendar currentDate = new SpoilerAlertCalendar(world);
 
 			daysExpired = currentDate.getDay() - (expirationDate.getDay() - 1);
 
 			plugin.debugInfo((daysExpired > 0 ? "daysExpired: " : "daysUntilExpiration: ") + Math.abs(daysExpired));
 		}
-		
+
 		return daysExpired;
 	}
 
@@ -281,7 +305,7 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 		if (itemStack == null) {
 			return null;
 		}
-		
+
 		NBTItem nbtItem = new NBTItem(itemStack);
 		return nbtItem.getString(NBT_SPOILER_ALERT_EXPIRATION_DATE);
 	}
@@ -310,7 +334,7 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 		perishableBlock.setX(block.getX());
 		perishableBlock.setY(block.getY());
 		perishableBlock.setZ(block.getZ());
-		perishableBlock.setExpirationDate(expirationDate != null ? expirationDate.getDisplayDate() : null);
+		perishableBlock.setExpirationDate(expirationDate != null ? expirationDate.getNbtDateString() : null);
 		perishableBlock.setWorld(block.getWorld().getName());
 		return perishableBlock;
 	}

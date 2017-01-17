@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import org.bukkit.World;
+import org.bukkit.entity.HumanEntity;
 
 public class SpoilerAlertCalendar {
 	
@@ -82,10 +83,6 @@ public class SpoilerAlertCalendar {
 		return dayOfWeek;
 	}
 	
-	public String getDisplayDate(){
-		return monthOfYear + "/" + dayOfMonth + "/" + year;
-	}
-	
 	public long getFullTime() {
 		return fullTime;
 	}
@@ -93,18 +90,42 @@ public class SpoilerAlertCalendar {
 	public void setFullTime(long fullTime) {
 		this.fullTime = fullTime;
 	}
+	
+	public String getNbtDateString(){
+		String dateFormat = SpoilerAlertPlugin.NBT_DATE_FORMAT;
+		SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+		Calendar cal = new GregorianCalendar();
+		
+		cal.set(Calendar.MONTH, monthOfYear - 1);
+		cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+		cal.set(Calendar.YEAR, year);
+		return sdf.format(cal.getTime());
+	}
+	
+	public String getDateString(HumanEntity player, SpoilerAlertPlugin plugin){
+		
+		String dateFormat = plugin.getPlayerDateFormat(player);
+		
+		SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+		Calendar cal = new GregorianCalendar();
+		
+		cal.set(Calendar.MONTH, monthOfYear - 1);
+		cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+		cal.set(Calendar.YEAR, year);
+		return sdf.format(cal.getTime());
+	}
 
 	public static SpoilerAlertCalendar getSpoilersCalendarFromDateString(String dateString){
 		
 		try {
-			String dateFormat = SpoilerAlertPlugin.CONFIG.getConfig().getString(ConfigKeyEnum.DATE_FORMAT.getKey(), "mm/dd/yyyy");
+			String dateFormat = SpoilerAlertPlugin.NBT_DATE_FORMAT;
 			SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
 			Date date = sdf.parse(dateString);
 			
 			Calendar cal = new GregorianCalendar();
 			cal.setTime(date);
 			
-			int month = cal.get(Calendar.MONTH) - 1;
+			int month = cal.get(Calendar.MONTH);
 			int day = cal.get(Calendar.DAY_OF_MONTH);
 			int year = cal.get(Calendar.YEAR) - 1;
 			

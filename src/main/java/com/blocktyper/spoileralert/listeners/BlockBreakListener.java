@@ -23,7 +23,6 @@ public class BlockBreakListener extends SpoilerAlertListenerBase {
 				.getDrops(plugin.getPlayerHelper().getItemInHand(event.getPlayer()));
 
 		if (drops == null || drops.isEmpty()) {
-			plugin.debugInfo("[onBlockBreakEvent] drops == null || drops.isEmpty()");
 			return;
 		}
 
@@ -31,10 +30,8 @@ public class BlockBreakListener extends SpoilerAlertListenerBase {
 		Long daysSourceExpired = null;
 
 		if (expirationDate != null) {
-			plugin.debugInfo("[onBlockBreakEvent] expirationDate !=  null: " + expirationDate.getDisplayDate());
-			daysSourceExpired = getDaysExpired(expirationDate.getDisplayDate(), event.getBlock().getWorld());
+			daysSourceExpired = getDaysExpired(expirationDate.getNbtDateString(), event.getBlock().getWorld());
 			daysSourceExpired = daysSourceExpired != null ? daysSourceExpired + 1 : null;
-			plugin.debugInfo("[onBlockBreakEvent] daysSourceExpired: " + (daysSourceExpired != null ? daysSourceExpired : "null"));
 			
 			for (ItemStack drop : drops) {
 				ItemStack newDrop = setExpirationDate(drop, event.getBlock().getWorld(), daysSourceExpired, event.getPlayer());
@@ -44,8 +41,6 @@ public class BlockBreakListener extends SpoilerAlertListenerBase {
 			event.getBlock().setType(Material.AIR);
 			event.setCancelled(true);
 			
-		}else{
-			plugin.debugInfo("[onBlockBreakEvent] expirationDate == null");
 		}
 	}
 

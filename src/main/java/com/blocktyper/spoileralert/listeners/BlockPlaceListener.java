@@ -52,7 +52,7 @@ public class BlockPlaceListener extends SpoilerAlertListenerBase {
 		plugin.debugInfo("[onBlockPlaceEvent] place block (itemInHand): " + itemInHand.getItemMeta().getDisplayName());
 		plugin.debugInfo("[onBlockPlaceEvent] place block (block): " + event.getBlock().getType().name());
 		expirationDate.addDays(-1);
-		perishableBlock.setExpirationDate(expirationDate.getDisplayDate());
+		perishableBlock.setExpirationDate(expirationDate.getNbtDateString());
 		addPerishableBlock(perishableBlock);
 	}
 

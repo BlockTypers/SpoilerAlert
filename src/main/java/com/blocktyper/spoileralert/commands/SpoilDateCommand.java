@@ -28,7 +28,7 @@ public class SpoilDateCommand implements CommandExecutor {
 			}
 			Player player = (Player) sender;
 			String message = plugin.getLocalizedMessage(LocalizedMessageEnum.DATE.getKey(), player);
-			player.sendMessage(message + ": " + new SpoilerAlertCalendar(player.getWorld()).getDisplayDate());
+			player.sendMessage(message + ": " + new SpoilerAlertCalendar(player.getWorld()).getDateString(player,  plugin));
 		} catch (Exception e) {
 			plugin.warning("error running '" + label + "':  " + e.getMessage());
 			return false;

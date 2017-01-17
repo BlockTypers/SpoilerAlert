@@ -6,7 +6,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
-import com.blocktyper.spoileralert.ConfigKeyEnum;
 import com.blocktyper.spoileralert.SpoilerAlertPlugin;
 
 public class InventoryClickListener extends SpoilerAlertListenerBase {
@@ -32,12 +31,8 @@ public class InventoryClickListener extends SpoilerAlertListenerBase {
 
 		Player player = ((Player) event.getWhoClicked());
 
-		if (plugin.getConfig().getBoolean(ConfigKeyEnum.SET_EXPIRATION_ON_INVENTORY_CLICK.getKey(), true)) {
-			event.setCurrentItem(setExpirationDate(event.getCurrentItem(), player.getWorld(), null, event.getWhoClicked()));
-		}else{
-			//for language conversion only
-			event.setCurrentItem(setExpirationDate(event.getCurrentItem(), player.getWorld(), null, event.getWhoClicked(), true));
-		}
+		// for language conversion only
+		event.setCurrentItem(setExpirationDate(event.getCurrentItem(), player.getWorld(), null, event.getWhoClicked()));
 
 		sendExpiredMessage(event.getCurrentItem(), player);
 	}
