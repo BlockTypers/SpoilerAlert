@@ -4,6 +4,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.inventory.ItemStack;
 
 import com.blocktyper.spoileralert.SpoilerAlertPlugin;
 
@@ -13,7 +14,7 @@ public class PickupListener extends SpoilerAlertListenerBase {
 		super(plugin);
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	/*
 	 * ON PLAYER PICK UP
 	 */
@@ -26,7 +27,13 @@ public class PickupListener extends SpoilerAlertListenerBase {
 			return;
 		}
 
-		item.setItemStack(setExpirationDate(item.getItemStack(), item.getWorld(), null, event.getPlayer()));
+		ItemStack newItemStack = setExpirationDate(item.getItemStack(), item.getWorld(), null, event.getPlayer());
+
+		if (continuousTranslationEnabled()) {
+			newItemStack = convertItemStackLanguage(newItemStack, event.getPlayer());
+		}
+
+		item.setItemStack(newItemStack);
 	}
-	
+
 }

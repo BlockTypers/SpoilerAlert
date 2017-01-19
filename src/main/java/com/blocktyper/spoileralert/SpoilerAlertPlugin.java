@@ -33,6 +33,7 @@ public class SpoilerAlertPlugin extends BlockTyperPlugin {
 	
 	public SpoilerAlertPlugin() {
 		super();
+		useOnPickupTranslationListener = false;
 	}
 
 	public void onEnable() {

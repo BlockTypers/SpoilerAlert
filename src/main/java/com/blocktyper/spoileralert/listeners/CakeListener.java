@@ -46,7 +46,7 @@ public class CakeListener extends SpoilerAlertListenerBase {
 		if (daysSourceExpired == null || daysSourceExpired < 1) {
 			String cakeNotExpiredText = plugin.getLocalizedMessage(LocalizedMessageEnum.CAKE_NOT_EXPIRED.getKey(), event.getPlayer());
 			if (!isEating)
-				event.getPlayer().sendMessage(cakeNotExpiredText + " [" + expirationDate.getDateString(event.getPlayer(), plugin) + "].");
+				event.getPlayer().sendMessage(cakeNotExpiredText + " [" + expirationDate.getDateString(event.getPlayer(), spoilerAlertPlugin) + "].");
 			return;
 		}
 		
