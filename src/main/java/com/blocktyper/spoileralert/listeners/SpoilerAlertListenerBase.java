@@ -58,7 +58,6 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 	protected ItemStack setExpirationDate(ItemStack itemStack, World world, Long daysExpired, HumanEntity player) {
 
 		if (itemStack == null) {
-			plugin.debugInfo("[setExpirationDate] itemStack == null");
 			return itemStack;
 		}
 
@@ -75,16 +74,11 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 		}
 
 		if (lifeSpan == null || !lifeSpan.isPresent() || lifeSpan.get() == null) {
-			plugin.debugInfo("[setExpirationDate] checking material shelf-lives: " + itemStack.getType().name() + ")");
 			lifeSpan = plugin.getConfig().getStringList(ConfigKeyEnum.LIFE_SPANS.getKey()).stream()
 					.filter(l -> l.startsWith(itemStack.getType().name())).findFirst();
-		} else {
-			plugin.debugInfo(
-					"[setExpirationDate] using recipe shelf-life:  " + itemStack.getItemMeta().getDisplayName() + ")");
 		}
 
 		if (daysExpired == null && (lifeSpan == null || !lifeSpan.isPresent())) {
-			plugin.debugInfo("[setExpirationDate] daysExpired == null && (lifeSpan == null || !lifeSpan.isPresent())");
 			return itemStack;
 		}
 
@@ -118,9 +112,11 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 			lore = new ArrayList<>();
 
 		try {
-			Date existingExpirationDate = getDateFromNbtString(
-					nbtItemForExistingCheck.getString(NBT_SPOILER_ALERT_EXPIRATION_DATE));
-			lore.add(getExpirationDateLoreLine(player, getStringfromDate(existingExpirationDate, player)));
+			String expirationDateNbtString = nbtItemForExistingCheck.getString(NBT_SPOILER_ALERT_EXPIRATION_DATE);
+			Date existingExpirationDate = getDateFromNbtString(expirationDateNbtString);
+			String formattedExpirationDate = getStringfromDate(existingExpirationDate, player);
+			daysExpired = getDaysExpired(expirationDateNbtString, world);
+			lore.add(getExpirationDateLoreLine(player, (daysExpired == null || daysExpired < 1 ? "" : ChatColor.RED) + formattedExpirationDate));
 			itemMeta.setLore(lore);
 			itemStack.setItemMeta(itemMeta);
 		} catch (ParseException e) {
@@ -167,7 +163,7 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 		if (lore == null)
 			lore = new ArrayList<>();
 
-		lore.add(getExpirationDateLoreLine(player, formattedDateString));
+		lore.add(getExpirationDateLoreLine(player, (daysExpired == null || daysExpired < 1 ? "" : ChatColor.RED) + formattedDateString));
 		itemMeta.setLore(lore);
 		itemStack.setItemMeta(itemMeta);
 
@@ -179,9 +175,9 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 	private String getExpirationDateLoreLine(HumanEntity player, String formattedDateString) {
 		String invis = InvisibleLoreHelper.convertToInvisibleString(INVISIBLE_PREFIX_SPOILER_ALERT_EXPIRATION_DATE);
 		String expirationDateText = plugin.getLocalizedMessage(LocalizedMessageEnum.EXPIRATION_DATE.getKey(), player);
-		String loreFormat = "{0}[{1}]: ({2})";
+		String loreFormat = "{0}{1}: {2}";
 		String loreLine = new MessageFormat(loreFormat)
-				.format(new Object[] { invis, expirationDateText, formattedDateString });
+				.format(new Object[] { invis, expirationDateText, formattedDateString + ChatColor.RESET });
 		return loreLine;
 	}
 
@@ -266,7 +262,7 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 
 	protected Long getDaysExpired(String expirationString, World world) {
 
-		if (expirationString == null) {
+		if (expirationString == null || expirationString.isEmpty()) {
 			return null;
 		}
 
@@ -291,8 +287,6 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 			SpoilerAlertCalendar currentDate = new SpoilerAlertCalendar(world);
 
 			daysExpired = currentDate.getDay() - (expirationDate.getDay() - 1);
-
-			plugin.debugInfo((daysExpired > 0 ? "daysExpired: " : "daysUntilExpiration: ") + Math.abs(daysExpired));
 		}
 
 		return daysExpired;
@@ -346,23 +340,18 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 		PerishableBlock perishableBlock = createPerishableBlock(block, null);
 
 		if (!perishableBlockRepo.getMap().containsKey(perishableBlock.getId())) {
-			plugin.debugInfo(
-					"[onBlockBreakEvent] !perishableBlockRepo.getMap().containsKey(" + perishableBlock.getId() + ")");
 			return null;
 		}
 
 		perishableBlock = perishableBlockRepo.getMap().get(perishableBlock.getId());
 
 		if (perishableBlock == null || perishableBlock.getExpirationDate() == null) {
-			plugin.debugInfo(
-					"[onBlockBreakEvent] perishableBlock == null || perishableBlock.getExpirationDate() == null");
 			return null;
 		}
 
 		expirationDate = SpoilerAlertCalendar.getSpoilersCalendarFromDateString(perishableBlock.getExpirationDate());
 
 		if (expirationDate == null) {
-			plugin.debugInfo("[onBlockBreakEvent] spoilerAlertCalendar == null");
 			return null;
 		}
 
@@ -379,9 +368,6 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 
 		Long buffDuration = plugin.getConfig().getLong(ConfigKeyEnum.BASE_DEBUFF_DURATION_IN_SECONDS.getKey(), 30);
 		buffDuration = buffDuration * (1 + (daysExpired / lifeSpanInDays));
-
-		plugin.debugInfo("[makePlayerSick] buffMagnitude: " + buffMagnitude);
-		plugin.debugInfo("[makePlayerSick] buffDuration: " + buffDuration);
 
 		if (plugin.getConfig().getBoolean(ConfigKeyEnum.BLINDING_ENABLED.getKey(), true)) {
 			player.addPotionEffect(
@@ -408,9 +394,6 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 		if (plugin.getConfig().getBoolean(ConfigKeyEnum.HARM_ENABLED.getKey(), true)) {
 			Long ageBeforeHarmProportion = plugin.getConfig()
 					.getLong(ConfigKeyEnum.AGE_BEFORE_HARM_AS_PROPORTION_OF_SHELF_LIFE.getKey(), 3);
-			plugin.debugInfo("[makePlayerSick] ageBeforeHarmProportion: " + ageBeforeHarmProportion);
-			plugin.debugInfo("[makePlayerSick] lifeSpanInDays*ageBeforeHarmProportion: "
-					+ lifeSpanInDays * ageBeforeHarmProportion);
 			if (lifeSpanInDays * ageBeforeHarmProportion <= daysExpired) {
 				int harmMagnifier = buffMagnitude;
 				if (ageBeforeHarmProportion <= buffMagnitude) {

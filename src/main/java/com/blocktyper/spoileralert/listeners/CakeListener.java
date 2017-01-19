@@ -57,7 +57,6 @@ public class CakeListener extends SpoilerAlertListenerBase {
 		}
 		
 		if(event.getPlayer().getFoodLevel() >= 20){
-			plugin.debugInfo("  -" + event.getPlayer().getFoodLevel());
 			return;
 		}
 

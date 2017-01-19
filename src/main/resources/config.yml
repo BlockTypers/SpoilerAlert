@@ -9,7 +9,7 @@ locale: en
 debug: false
 log.recipes.enable: false
 
-spoileralert-use-real-dates: false
+spoileralert-use-real-dates: true
 
 spoileralert-base-debuf-duration-in-seconds: 30
 
@@ -275,11 +275,11 @@ recipe.salted-mutton.item-has-nbt-key:
 
 
 messages.spoileralert-perishable.fallback: Perishable
-messages.spoileralert-expiration-date.fallback: Expiration Ddate
+messages.spoileralert-expiration-date.fallback: Expiration Date
 messages.spoileralert-cake-has-no-expiration-date.fallback: This cake has no expiration date.
 messages.spoileralert-cake-not-expired.fallback: This cake is not expired.
 messages.spoileralert-hit-cakes-first.fallback: Next time hit the cake first to find out if it is still good to eat.
-messages.spoileralert-expired-message.fallback: EXPIRED {0} days- Danger level {1}
+messages.spoileralert-expired-message.fallback: EXPIRED {0} days- ☣ {1}
 messages.spoileralert-date.fallback: Date
 
 messages.spoileralert-perishable.de: Leichtverderblich

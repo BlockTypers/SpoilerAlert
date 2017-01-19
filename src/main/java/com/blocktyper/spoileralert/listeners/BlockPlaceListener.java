@@ -27,13 +27,10 @@ public class BlockPlaceListener extends SpoilerAlertListenerBase {
 		ItemStack itemInHand = plugin.getPlayerHelper().getItemInHand(event.getPlayer());
 
 		if (itemInHand == null) {
-			plugin.debugInfo("[onBlockPlaceEvent] itemInHand == null");
 			return;
 		}
 
 		if (itemInHand.getItemMeta() == null || itemInHand.getItemMeta().getDisplayName() == null) {
-			plugin.debugInfo(
-					"[onBlockPlaceEvent] cakeItem.getItemMeta() == null || cakeItem.getItemMeta().getDisplayName() == null");
 			return;
 		}
 
@@ -49,8 +46,6 @@ public class BlockPlaceListener extends SpoilerAlertListenerBase {
 			return;
 		}
 
-		plugin.debugInfo("[onBlockPlaceEvent] place block (itemInHand): " + itemInHand.getItemMeta().getDisplayName());
-		plugin.debugInfo("[onBlockPlaceEvent] place block (block): " + event.getBlock().getType().name());
 		expirationDate.addDays(-1);
 		perishableBlock.setExpirationDate(expirationDate.getNbtDateString());
 		addPerishableBlock(perishableBlock);

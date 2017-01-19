@@ -22,7 +22,7 @@ public class SetDayCommand implements CommandExecutor {
 	public SetDayCommand(SpoilerAlertPlugin plugin) {
 		this.plugin = plugin;
 		playerWorldReturnMap = new HashMap<String, Map<String, Long>>();
-		plugin.getCommand("spoil-set-day").setExecutor(this);
+		plugin.getCommand("spoil-day").setExecutor(this);
 	}
 
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

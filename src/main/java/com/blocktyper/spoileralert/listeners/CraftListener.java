@@ -25,14 +25,10 @@ public class CraftListener extends SpoilerAlertListenerBase{
 	 */
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onPrepareItemCraft(PrepareItemCraftEvent event) {
-		plugin.debugInfo("onPrepareItemCraft");
 
 		ItemStack result = event.getInventory().getResult();
 		if (result == null) {
-			plugin.debugInfo("onPrepareItemCraft result == null");
 			return;
-		}else{
-			plugin.debugInfo("onPrepareItemCraft result = " + event.getInventory().getResult().getType().name());
 		}
 		
 		HumanEntity player = event.getViewers() != null && !event.getViewers().isEmpty() ? event.getViewers().get(0) : null;
@@ -48,8 +44,6 @@ public class CraftListener extends SpoilerAlertListenerBase{
 		Long daysSourceExpired = optionalLong != null && optionalLong.isPresent() ? optionalLong.getAsLong() : null;
 		daysSourceExpired = daysSourceExpired == null || daysSourceExpired < 1 ? null : daysSourceExpired;
 		
-		plugin.debugInfo("[onPrepareItemCraft] daysSourceExpired = " + (daysSourceExpired == null? "null" : daysSourceExpired));
-
 		event.getInventory().setResult(setExpirationDate(result, world, daysSourceExpired, event.getViewers() != null && !event.getViewers().isEmpty() ? event.getViewers().get(0) : null));
 	}
 }

@@ -20,12 +20,9 @@ public class PickupListener extends SpoilerAlertListenerBase {
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onPlayerPickupItem(PlayerPickupItemEvent event) {
 
-		plugin.debugInfo("onPlayerPickupItem");
-
 		Item item = event.getItem();
 
 		if (item == null) {
-			plugin.debugInfo("onPlayerPickupItem item == null");
 			return;
 		}
 

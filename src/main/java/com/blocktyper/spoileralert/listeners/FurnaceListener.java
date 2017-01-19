@@ -21,11 +21,8 @@ public class FurnaceListener extends SpoilerAlertListenerBase {
 	 */
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onFurnaceSmeltEvent(FurnaceSmeltEvent event) {
-		plugin.debugInfo("onFurnaceSmeltEvent");
-
 		ItemStack result = event.getResult();
 		if (result == null) {
-			plugin.debugInfo("onFurnaceSmeltEvent result == null");
 			return;
 		}
 
