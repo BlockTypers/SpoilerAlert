@@ -140,7 +140,7 @@ recipe.coarse-salt.amount: 4
 
 ################## BEGIN Salted Beef #################
 recipe.salted-beef.name: Salted Beef
-recipe.salted.de.name: gesalzen Rindfleisch
+recipe.salted-beef.de.name: gesalzen Rindfleisch
 recipe.salted-beef.fr.name: boeuf salé
 recipe.salted-beef.es.name: Carne de vaca salada
 recipe.salted-beef.vi.name: thịt bò ướp muối
