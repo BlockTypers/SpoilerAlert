@@ -23,8 +23,8 @@ spoileralert-decrease-food-level-enabled: true
 spoileralert-decrease-saturation-enabled: true
 
 spoileralert-date-format.en_us: M/d/yyyy
-spoileralert-date-format.zh_cn: yyyy-mm-dd
-spoileralert-date-format.de: yyyy-mm-dd
+spoileralert-date-format.zh_cn: yyyy-MM-dd
+spoileralert-date-format.de: yyyy-MM-dd
 
 spoileralert-recipe-shelf-life: 
   - candy-apple=21

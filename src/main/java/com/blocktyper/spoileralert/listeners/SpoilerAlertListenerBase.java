@@ -40,6 +40,10 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 
 	public static final String NBT_SPOILER_ALERT_EXPIRATION_DATE = "SPOILER_ALERT_EXPIRATION_DATE";
 	public static final String INVISIBLE_PREFIX_SPOILER_ALERT_EXPIRATION_DATE = "SP_EXP#";
+	
+	public static final String NBT_SPOILER_ALERT_DATE_TYPE = "NBT_SPOILER_ALERT_DATE_TYPE";
+	public static final String NBT_VALUE_SPOILER_ALERT_REAL_DATE_TYPE = "REAL";
+	public static final String NBT_VALUE_SPOILER_ALERT_FAKE_DATE_TYPE = "FAKE";
 
 	protected static PerishableBlockRepo perishableBlockRepo;
 
@@ -83,8 +87,16 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 		}
 
 		List<String> lore = itemMeta.getLore();
+		
+		String expectedDateType = NBT_VALUE_SPOILER_ALERT_FAKE_DATE_TYPE;
+		
+		if (plugin.getConfig().getBoolean(ConfigKeyEnum.USE_REAL_DATES.getKey(), false)) {
+			expectedDateType = NBT_VALUE_SPOILER_ALERT_REAL_DATE_TYPE;
+		}
+		
+		String dateType = nbtItemForExistingCheck.getString(NBT_SPOILER_ALERT_DATE_TYPE);
 
-		if (!nbtItemForExistingCheck.hasKey(NBT_SPOILER_ALERT_EXPIRATION_DATE)) {
+		if (!nbtItemForExistingCheck.hasKey(NBT_SPOILER_ALERT_EXPIRATION_DATE) || !expectedDateType.equals(dateType)) {
 
 			// strip legacy lore
 			if (lore != null && !lore.isEmpty()) {
@@ -145,6 +157,7 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 
 		String expDateAsNbtString = "";
 		String formattedDateString = "";
+		String dateType = NBT_VALUE_SPOILER_ALERT_FAKE_DATE_TYPE;
 
 		if (plugin.getConfig().getBoolean(ConfigKeyEnum.USE_REAL_DATES.getKey(), false)) {
 			Calendar cal = new GregorianCalendar();
@@ -153,6 +166,7 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 			Date calDate = cal.getTime();
 			expDateAsNbtString = getNbtStringfromDate(calDate);
 			formattedDateString = getStringfromDate(calDate, player);
+			dateType = NBT_VALUE_SPOILER_ALERT_REAL_DATE_TYPE;
 		} else {
 			SpoilerAlertCalendar expirationDate = new SpoilerAlertCalendar(player.getWorld());
 			expirationDate.addDays(days);
@@ -162,6 +176,12 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 
 		if (lore == null)
 			lore = new ArrayList<>();
+		
+		lore = lore.stream().filter(l -> !loreLineContainsInvisExpirationDatePrefix(l))
+				.collect(Collectors.toList());
+		
+		if (lore == null)
+			lore = new ArrayList<>();
 
 		lore.add(getExpirationDateLoreLine(player, (daysExpired == null || daysExpired < 1 ? "" : ChatColor.RED) + formattedDateString));
 		itemMeta.setLore(lore);
@@ -169,6 +189,7 @@ public abstract class SpoilerAlertListenerBase implements Listener {
 
 		NBTItem nbtItem = new NBTItem(itemStack);
 		nbtItem.setString(NBT_SPOILER_ALERT_EXPIRATION_DATE, expDateAsNbtString);
+		nbtItem.setString(NBT_SPOILER_ALERT_DATE_TYPE, dateType);
 		return nbtItem.getItem();
 	}
 

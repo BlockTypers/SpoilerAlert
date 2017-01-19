@@ -14,6 +14,7 @@ import com.blocktyper.spoileralert.listeners.CraftListener;
 import com.blocktyper.spoileralert.listeners.FoodEatListener;
 import com.blocktyper.spoileralert.listeners.FurnaceListener;
 import com.blocktyper.spoileralert.listeners.InventoryClickListener;
+import com.blocktyper.spoileralert.listeners.InventoryOpenListener;
 import com.blocktyper.spoileralert.listeners.PickupListener;
 import com.blocktyper.spoileralert.listeners.BlockBreakListener;
 import com.blocktyper.spoileralert.listeners.BlockPlaceListener;
@@ -53,6 +54,7 @@ public class SpoilerAlertPlugin extends BlockTyperPlugin {
 		new FurnaceListener(this);
 		new InventoryClickListener(this);
 		new PickupListener(this);
+		new InventoryOpenListener(this);
 	}
 
 	// begin localization
