@@ -52,7 +52,6 @@ public abstract class SpoilerAlertListenerBase extends ContinuousTranslationList
 	public SpoilerAlertListenerBase(SpoilerAlertPlugin plugin) {
 		super(plugin);
 		this.spoilerAlertPlugin = plugin;
-		this.plugin.getServer().getPluginManager().registerEvents(this, plugin);
 		initPerishableBlockRepo();
 	}
 
@@ -98,43 +97,28 @@ public abstract class SpoilerAlertListenerBase extends ContinuousTranslationList
 		String dateType = nbtItemForExistingCheck.getString(NBT_SPOILER_ALERT_DATE_TYPE);
 
 		if (!nbtItemForExistingCheck.hasKey(NBT_SPOILER_ALERT_EXPIRATION_DATE) || !expectedDateType.equals(dateType)) {
-
-			// strip legacy lore
-			if (lore != null && !lore.isEmpty()) {
-				String legacyExpirationDateText = "["
-						+ plugin.getLocalizedMessage(LocalizedMessageEnum.EXPIRATION_DATE.getKey()) + "]";
-				long existingLoreCount = lore.stream().filter(l -> l.contains(legacyExpirationDateText)).count();
-
-				if (existingLoreCount > 0) {
-					lore = lore.stream().filter(l -> !l.contains(legacyExpirationDateText))
-							.collect(Collectors.toList());
-					itemMeta.setLore(lore);
-					itemStack.setItemMeta(itemMeta);
-				}
-			}
-
 			return getItemWithNbtTagExpirationDate(player, itemStack, itemMeta, lore, daysExpired, lifeSpan.get());
-		}
+		}else if(plugin.getConfig().getBoolean(ConfigKeyEnum.USE_LORE.getKey(), true)){
+			// Language conversion
+			if (lore != null && !lore.isEmpty()) {
+				lore = lore.stream().filter(l -> !loreLineContainsInvisExpirationDatePrefix(l))
+						.collect(Collectors.toList());
+			}
+			if (lore == null)
+				lore = new ArrayList<>();
 
-		// Language conversion
-		if (lore != null && !lore.isEmpty()) {
-			lore = lore.stream().filter(l -> !loreLineContainsInvisExpirationDatePrefix(l))
-					.collect(Collectors.toList());
-		}
-		if (lore == null)
-			lore = new ArrayList<>();
-
-		try {
-			String expirationDateNbtString = nbtItemForExistingCheck.getString(NBT_SPOILER_ALERT_EXPIRATION_DATE);
-			Date existingExpirationDate = getDateFromNbtString(expirationDateNbtString);
-			String formattedExpirationDate = getStringfromDate(existingExpirationDate, player);
-			daysExpired = getDaysExpired(expirationDateNbtString, world);
-			lore.add(getExpirationDateLoreLine(player,
-					(daysExpired == null || daysExpired < 1 ? "" : ChatColor.RED) + formattedExpirationDate));
-			itemMeta.setLore(lore);
-			itemStack.setItemMeta(itemMeta);
-		} catch (ParseException e) {
-			e.printStackTrace();
+			try {
+				String expirationDateNbtString = nbtItemForExistingCheck.getString(NBT_SPOILER_ALERT_EXPIRATION_DATE);
+				Date existingExpirationDate = getDateFromNbtString(expirationDateNbtString);
+				String formattedExpirationDate = getStringfromDate(existingExpirationDate, player);
+				daysExpired = getDaysExpired(expirationDateNbtString, world);
+				lore.add(getExpirationDateLoreLine(player,
+						(daysExpired == null || daysExpired < 1 ? "" : ChatColor.RED) + formattedExpirationDate));
+				itemMeta.setLore(lore);
+				itemStack.setItemMeta(itemMeta);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
 		}
 
 		return itemStack;
@@ -143,6 +127,32 @@ public abstract class SpoilerAlertListenerBase extends ContinuousTranslationList
 	private boolean loreLineContainsInvisExpirationDatePrefix(String loreLine) {
 		return loreLine != null && InvisibleLoreHelper.convertToVisibleString(loreLine)
 				.contains(INVISIBLE_PREFIX_SPOILER_ALERT_EXPIRATION_DATE);
+	}
+	
+	private static class ExpirationData{
+		String expDateAsNbtString;
+		String formattedDateString;
+		String dateType;
+	}
+	
+	private ExpirationData getExpirationData(int days, HumanEntity player){
+		ExpirationData expirationData = new ExpirationData();
+		if (plugin.getConfig().getBoolean(ConfigKeyEnum.USE_REAL_DATES.getKey(), false)) {
+			Calendar cal = new GregorianCalendar();
+			cal.setTime(new Date());
+			cal.add(Calendar.DAY_OF_YEAR, days);
+			Date calDate = cal.getTime();
+			expirationData.expDateAsNbtString = getNbtStringfromDate(calDate);
+			expirationData.formattedDateString = getStringfromDate(calDate, player);
+			expirationData.dateType = NBT_VALUE_SPOILER_ALERT_REAL_DATE_TYPE;
+		} else {
+			SpoilerAlertCalendar expirationDate = new SpoilerAlertCalendar(player.getWorld());
+			expirationDate.addDays(days);
+			expirationData.expDateAsNbtString = expirationDate.getNbtDateString();
+			expirationData.formattedDateString = expirationDate.getDateString(player, spoilerAlertPlugin);
+			expirationData.dateType = NBT_VALUE_SPOILER_ALERT_FAKE_DATE_TYPE;
+		}
+		return expirationData;
 	}
 
 	private ItemStack getItemWithNbtTagExpirationDate(HumanEntity player, ItemStack itemStack, ItemMeta itemMeta,
@@ -157,41 +167,27 @@ public abstract class SpoilerAlertListenerBase extends ContinuousTranslationList
 			days = Integer.parseInt(daysString);
 		}
 
-		String expDateAsNbtString = "";
-		String formattedDateString = "";
-		String dateType = NBT_VALUE_SPOILER_ALERT_FAKE_DATE_TYPE;
+		ExpirationData expirationData = getExpirationData(days, player);
+		
+		
+		if(plugin.getConfig().getBoolean(ConfigKeyEnum.USE_LORE.getKey(), true)){
+			if (lore == null)
+				lore = new ArrayList<>();
 
-		if (plugin.getConfig().getBoolean(ConfigKeyEnum.USE_REAL_DATES.getKey(), false)) {
-			Calendar cal = new GregorianCalendar();
-			cal.setTime(new Date());
-			cal.add(Calendar.DAY_OF_YEAR, days);
-			Date calDate = cal.getTime();
-			expDateAsNbtString = getNbtStringfromDate(calDate);
-			formattedDateString = getStringfromDate(calDate, player);
-			dateType = NBT_VALUE_SPOILER_ALERT_REAL_DATE_TYPE;
-		} else {
-			SpoilerAlertCalendar expirationDate = new SpoilerAlertCalendar(player.getWorld());
-			expirationDate.addDays(days);
-			expDateAsNbtString = expirationDate.getNbtDateString();
-			formattedDateString = expirationDate.getDateString(player, spoilerAlertPlugin);
+			lore = lore.stream().filter(l -> !loreLineContainsInvisExpirationDatePrefix(l)).collect(Collectors.toList());
+
+			if (lore == null)
+				lore = new ArrayList<>();
+
+			lore.add(getExpirationDateLoreLine(player,
+					(daysExpired == null || daysExpired < 1 ? "" : ChatColor.RED) + expirationData.formattedDateString));
+			itemMeta.setLore(lore);
+			itemStack.setItemMeta(itemMeta);
 		}
 
-		if (lore == null)
-			lore = new ArrayList<>();
-
-		lore = lore.stream().filter(l -> !loreLineContainsInvisExpirationDatePrefix(l)).collect(Collectors.toList());
-
-		if (lore == null)
-			lore = new ArrayList<>();
-
-		lore.add(getExpirationDateLoreLine(player,
-				(daysExpired == null || daysExpired < 1 ? "" : ChatColor.RED) + formattedDateString));
-		itemMeta.setLore(lore);
-		itemStack.setItemMeta(itemMeta);
-
 		NBTItem nbtItem = new NBTItem(itemStack);
-		nbtItem.setString(NBT_SPOILER_ALERT_EXPIRATION_DATE, expDateAsNbtString);
-		nbtItem.setString(NBT_SPOILER_ALERT_DATE_TYPE, dateType);
+		nbtItem.setString(NBT_SPOILER_ALERT_EXPIRATION_DATE, expirationData.expDateAsNbtString);
+		nbtItem.setString(NBT_SPOILER_ALERT_DATE_TYPE, expirationData.dateType);
 		return nbtItem.getItem();
 	}
 
@@ -450,6 +446,9 @@ public abstract class SpoilerAlertListenerBase extends ContinuousTranslationList
 					.format(new Object[] { daysExpired + "", buffMagnitude + "" });
 
 			player.sendMessage(ChatColor.RED + expiredMessage);
+		}else if(daysExpired != null && !plugin.getConfig().getBoolean(ConfigKeyEnum.USE_LORE.getKey(), false)){
+			ExpirationData expirationData = getExpirationData(daysExpired.intValue()*-1, player);
+			player.sendMessage(getExpirationDateLoreLine(player,expirationData.formattedDateString));
 		}
 	}
 }

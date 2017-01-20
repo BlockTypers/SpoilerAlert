@@ -12,7 +12,8 @@ public enum ConfigKeyEnum {
 	DECREASE_FOOD_LEVEL_ENABLED("spoileralert-decrease-food-level-enabled"),
 	DECREASE_SATURATION_ENABLED("spoileralert-decrease-saturation-enabled"),
 	DATE_FORMAT("spoileralert-date-format"),
-	USE_REAL_DATES("spoileralert-use-real-dates");
+	USE_REAL_DATES("spoileralert-use-real-dates"),
+	USE_LORE("spoileralert-use-lore");
 
 
 	private String key;

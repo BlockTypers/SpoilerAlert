@@ -12,7 +12,6 @@ public class InventoryClickListener extends SpoilerAlertListenerBase {
 
 	public InventoryClickListener(SpoilerAlertPlugin plugin) {
 		super(plugin);
-		// TODO Auto-generated constructor stub
 	}
 
 	/*
