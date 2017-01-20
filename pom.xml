@@ -43,7 +43,7 @@
 		<dependency>
 			<groupId>com.blocktyper</groupId>
 			<artifactId>blocktyperplugin</artifactId>
-			<version>1.1.6</version>
+			<version>1.1.7</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>

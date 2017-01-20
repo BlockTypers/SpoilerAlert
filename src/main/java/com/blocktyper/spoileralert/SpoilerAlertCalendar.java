@@ -117,6 +117,9 @@ public class SpoilerAlertCalendar {
 
 	public static SpoilerAlertCalendar getSpoilersCalendarFromDateString(String dateString){
 		
+		if(dateString == null || dateString.isEmpty()){
+			return null;
+		}
 		try {
 			String dateFormat = SpoilerAlertPlugin.NBT_DATE_FORMAT;
 			SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
