@@ -9,6 +9,8 @@ locale: en
 debug: false
 log.recipes.enable: false
 
+spoileralert-block-spoiled-trades: true
+
 spoileralert-use-real-dates: true
 spoileralert-use-lore: true
 
@@ -99,11 +101,13 @@ recipe.candy-apple.de.name: Karamell Apfel
 recipe.candy-apple.fr.name: Pomme confite
 recipe.candy-apple.es.name: Manzana de caramelo
 recipe.candy-apple.vi.name: táo kẹo
+recipe.candy-apple.sv.name: Caramel Äpple
 recipe.candy-apple.locales:
   - de
   - fr
   - es
   - vi
+  - sv
 recipe.candy-apple.rows: 
   - RSR
   - SAS
@@ -122,11 +126,13 @@ recipe.coarse-salt.de.name: grobem Salz
 recipe.coarse-salt.fr.name: gros sel
 recipe.coarse-salt.es.name: sal gruesa
 recipe.coarse-salt.vi.name: Muối thô
+recipe.coarse-salt.sv.name: Salt
 recipe.coarse-salt.locales: 
   - de
   - fr
   - es
   - vi
+  - sv
 recipe.coarse-salt.rows: 
   - AWA
   - ACA
@@ -145,11 +151,13 @@ recipe.salted-beef.de.name: gesalzen Rindfleisch
 recipe.salted-beef.fr.name: boeuf salé
 recipe.salted-beef.es.name: Carne de vaca salada
 recipe.salted-beef.vi.name: thịt bò ướp muối
+recipe.salted-beef.sv.name: Saltad Biff
 recipe.salted-beef.locales: 
   - de
   - fr
   - es
   - vi
+  - sv
 recipe.salted-beef.rows: 
   - ASA
   - SBS
@@ -172,11 +180,13 @@ recipe.salted-pork.de.name: gesalzen Schweinefleisch
 recipe.salted-pork.fr.name: porc salé
 recipe.salted-pork.es.name: Carne de cerdo salada
 recipe.salted-pork.vi.name: Thịt lợn muối
+recipe.salted-pork.sv.name: Saltad Skinka
 recipe.salted-pork.locales: 
   - de
   - fr
   - es
   - vi
+  - sv
 recipe.salted-pork.rows: 
   - ASA
   - SPS
@@ -199,11 +209,13 @@ recipe.salted-fish.de.name: gesalzene Fische
 recipe.salted-fish.fr.name: Le poisson salé
 recipe.salted-fish.es.name: pescado salado
 recipe.salted-fish.vi.name: Cá ướp muối
+recipe.salted-fish.sv.name: Saltad Fisk
 recipe.salted-fish.locales: 
   - de
   - fr
   - es
   - vi
+  - sv
 recipe.salted-fish.rows: 
   - ASA
   - SFS
@@ -226,11 +238,13 @@ recipe.salted-chicken.de.name: gesalzene Hühner
 recipe.salted-chicken.fr.name: poulet salé
 recipe.salted-chicken.es.name: pollo salado
 recipe.salted-chicken.vi.name: gà muối
+recipe.salted-fish.sv.name: Saltad Kyckling
 recipe.salted-chicken.locales: 
   - de
   - fr
   - es
   - vi
+  - sv
 recipe.salted-chicken.rows: 
   - ASA
   - SCS
@@ -253,11 +267,13 @@ recipe.salted-mutton.de.name: gesalzen Hammel
 recipe.salted-mutton.fr.name: salé Mouton
 recipe.salted-mutton.es.name: salado cordero
 recipe.salted-mutton.vi.name: muối Thịt cừu
+recipe.salted-mutton.sv.name: Saltat Fårkött
 recipe.salted-mutton.locales: 
   - de
   - fr
   - es
   - vi
+  - sv
 recipe.salted-mutton.rows: 
   - ASA
   - SMS
@@ -282,6 +298,7 @@ messages.spoileralert-cake-not-expired.fallback: This cake is not expired.
 messages.spoileralert-hit-cakes-first.fallback: Next time hit the cake first to find out if it is still good to eat.
 messages.spoileralert-expired-message.fallback: EXPIRED {0} days- ☣ {1}
 messages.spoileralert-date.fallback: Date
+messages.spoileralert-cant-trade-spoiled-good.fallback: §4You can't trade with spoiled goods.
 
 messages.spoileralert-perishable.de: Leichtverderblich
 messages.spoileralert-expiration-date.de: Verfallsdatum
@@ -290,6 +307,7 @@ messages.spoileralert-cake-not-expired.de: Dieser Kuchen ist nicht verdorben-
 messages.spoileralert-hit-cakes-first.de: Nächstes Mal traf den Kuchen zuerst, um herauszufinden, ob es noch gut zu essen ist.
 messages.spoileralert-expired-message.de: Verdorben {0} Tage- Gefahrenstufe {1}
 messages.spoileralert-date.de: Datum
+messages.spoileralert-cant-trade-spoiled-good.de: §4Du kannst nicht mit verdorbenen Waren handeln.
 
 
 

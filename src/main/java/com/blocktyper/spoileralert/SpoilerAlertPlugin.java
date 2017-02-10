@@ -5,8 +5,6 @@ import java.util.ResourceBundle;
 
 import org.bukkit.entity.HumanEntity;
 
-import com.blocktyper.config.BlockTyperConfig;
-import com.blocktyper.plugin.BlockTyperPlugin;
 import com.blocktyper.spoileralert.commands.HungerCommand;
 import com.blocktyper.spoileralert.commands.SetDayCommand;
 import com.blocktyper.spoileralert.commands.SpoilDateCommand;
@@ -16,11 +14,15 @@ import com.blocktyper.spoileralert.listeners.FurnaceListener;
 import com.blocktyper.spoileralert.listeners.InventoryClickListener;
 import com.blocktyper.spoileralert.listeners.InventoryOpenListener;
 import com.blocktyper.spoileralert.listeners.PickupListener;
+import com.blocktyper.spoileralert.listeners.PlayerTradeListener;
+import com.blocktyper.v1_2_0.BlockTyperBasePlugin;
+import com.blocktyper.v1_2_0.config.BlockTyperConfig;
+import com.blocktyper.v1_2_0.recipes.IRecipe;
 import com.blocktyper.spoileralert.listeners.BlockBreakListener;
 import com.blocktyper.spoileralert.listeners.BlockPlaceListener;
 import com.blocktyper.spoileralert.listeners.CakeListener;
 
-public class SpoilerAlertPlugin extends BlockTyperPlugin {
+public class SpoilerAlertPlugin extends BlockTyperBasePlugin {
 	
 	public static final String RECIPES_KEY = "MAGIC_DOORS_RECIPE_KEY";
 	
@@ -56,6 +58,10 @@ public class SpoilerAlertPlugin extends BlockTyperPlugin {
 		new InventoryClickListener(this);
 		new PickupListener(this);
 		new InventoryOpenListener(this);
+		
+		if(getConfig().getBoolean(ConfigKeyEnum.BLOCK_SPOILED_TRADES.getKey(), true)){
+			new PlayerTradeListener(this);
+		}
 	}
 
 	// begin localization
@@ -85,5 +91,10 @@ public class SpoilerAlertPlugin extends BlockTyperPlugin {
 		}
 		
 		return dateFormat;
+	}
+
+	@Override
+	public IRecipe bootstrapRecipe(IRecipe recipe) {
+		return recipe;
 	}
 }

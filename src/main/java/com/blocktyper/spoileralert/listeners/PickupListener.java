@@ -12,7 +12,6 @@ public class PickupListener extends SpoilerAlertListenerBase {
 
 	public PickupListener(SpoilerAlertPlugin plugin) {
 		super(plugin);
-		// TODO Auto-generated constructor stub
 	}
 
 	/*

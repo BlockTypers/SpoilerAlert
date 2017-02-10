@@ -13,7 +13,8 @@ public enum ConfigKeyEnum {
 	DECREASE_SATURATION_ENABLED("spoileralert-decrease-saturation-enabled"),
 	DATE_FORMAT("spoileralert-date-format"),
 	USE_REAL_DATES("spoileralert-use-real-dates"),
-	USE_LORE("spoileralert-use-lore");
+	USE_LORE("spoileralert-use-lore"),
+	BLOCK_SPOILED_TRADES("spoileralert-block-spoiled-trades");
 
 
 	private String key;

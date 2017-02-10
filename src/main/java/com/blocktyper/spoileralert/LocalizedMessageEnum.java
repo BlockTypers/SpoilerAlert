@@ -7,6 +7,7 @@ public enum LocalizedMessageEnum {
 	CAKE_HAS_NO_EXPIRATION_DATE("spoileralert-cake-has-no-expiration-date"),
 	HIT_CAKES_FIRST("spoileralert-hit-cakes-first"),
 	CAKE_NOT_EXPIRED("spoileralert-cake-not-expired"),
+	CANT_TRADE_SPOILED_GOODS("spoileralert-cant-trade-spoiled-good"),
 	DATE("spoileralert-date");
 
 
