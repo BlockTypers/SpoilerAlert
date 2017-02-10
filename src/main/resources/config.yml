@@ -27,7 +27,7 @@ spoileralert-decrease-saturation-enabled: true
 
 spoileralert-date-format.en_us: M/d/yyyy
 spoileralert-date-format.zh_cn: yyyy-MM-dd
-spoileralert-date-format.de: yyyy-MM-dd
+spoileralert-date-format.de: dd-MM-yyyy
 
 spoileralert-recipe-shelf-life: 
   - candy-apple=21
@@ -97,7 +97,7 @@ recipes-settings.continuous-translation: true
 
 ################## BEGIN Candy Apple ############
 recipe.candy-apple.name: Candy Apple
-recipe.candy-apple.de.name: Karamell Apfel
+recipe.candy-apple.de.name: Kandierter Apfel
 recipe.candy-apple.fr.name: Pomme confite
 recipe.candy-apple.es.name: Manzana de caramelo
 recipe.candy-apple.vi.name: táo kẹo
@@ -122,7 +122,7 @@ recipe.candy-apple.output: APPLE
 
 ################## BEGIN Coarse Salt #################
 recipe.coarse-salt.name: Coarse Salt
-recipe.coarse-salt.de.name: grobem Salz
+recipe.coarse-salt.de.name: grobes Salz
 recipe.coarse-salt.fr.name: gros sel
 recipe.coarse-salt.es.name: sal gruesa
 recipe.coarse-salt.vi.name: Muối thô
@@ -147,7 +147,7 @@ recipe.coarse-salt.amount: 4
 
 ################## BEGIN Salted Beef #################
 recipe.salted-beef.name: Salted Beef
-recipe.salted-beef.de.name: gesalzen Rindfleisch
+recipe.salted-beef.de.name: Gepökeltes Rindfleisch
 recipe.salted-beef.fr.name: boeuf salé
 recipe.salted-beef.es.name: Carne de vaca salada
 recipe.salted-beef.vi.name: thịt bò ướp muối
@@ -176,7 +176,7 @@ recipe.salted-beef.item-has-nbt-key:
   
 ################## BEGIN Salted Pork #################
 recipe.salted-pork.name: Salted Pork
-recipe.salted-pork.de.name: gesalzen Schweinefleisch
+recipe.salted-pork.de.name: Gepökeltes Schweinefleisch
 recipe.salted-pork.fr.name: porc salé
 recipe.salted-pork.es.name: Carne de cerdo salada
 recipe.salted-pork.vi.name: Thịt lợn muối
@@ -205,7 +205,7 @@ recipe.salted-pork.item-has-nbt-key:
   
 ################## BEGIN Salted Fish #################
 recipe.salted-fish.name: Salted Fish
-recipe.salted-fish.de.name: gesalzene Fische
+recipe.salted-fish.de.name: Gepökelter Fisch
 recipe.salted-fish.fr.name: Le poisson salé
 recipe.salted-fish.es.name: pescado salado
 recipe.salted-fish.vi.name: Cá ướp muối
@@ -234,7 +234,7 @@ recipe.salted-fish.item-has-nbt-key:
 
 ################## BEGIN Salted Chicken #################
 recipe.salted-chicken.name: Salted Chicken
-recipe.salted-chicken.de.name: gesalzene Hühner
+recipe.salted-chicken.de.name: Gepökeltes Huhn
 recipe.salted-chicken.fr.name: poulet salé
 recipe.salted-chicken.es.name: pollo salado
 recipe.salted-chicken.vi.name: gà muối
@@ -263,7 +263,7 @@ recipe.salted-chicken.item-has-nbt-key:
 
 ################## BEGIN Salted Mutton #################
 recipe.salted-mutton.name: Salted Mutton
-recipe.salted-mutton.de.name: gesalzen Hammel
+recipe.salted-mutton.de.name: Gepökelter Hammel
 recipe.salted-mutton.fr.name: salé Mouton
 recipe.salted-mutton.es.name: salado cordero
 recipe.salted-mutton.vi.name: muối Thịt cừu
@@ -300,12 +300,12 @@ messages.spoileralert-expired-message.fallback: EXPIRED {0} days- ☣ {1}
 messages.spoileralert-date.fallback: Date
 messages.spoileralert-cant-trade-spoiled-good.fallback: §4You can't trade with spoiled goods.
 
-messages.spoileralert-perishable.de: Leichtverderblich
+messages.spoileralert-perishable.de: Leicht Verderblich
 messages.spoileralert-expiration-date.de: Verfallsdatum
 messages.spoileralert-cake-has-no-expiration-date.de: Dieser Kuchen hat kein Verfallsdatum.
-messages.spoileralert-cake-not-expired.de: Dieser Kuchen ist nicht verdorben-
-messages.spoileralert-hit-cakes-first.de: Nächstes Mal traf den Kuchen zuerst, um herauszufinden, ob es noch gut zu essen ist.
-messages.spoileralert-expired-message.de: Verdorben {0} Tage- Gefahrenstufe {1}
+messages.spoileralert-cake-not-expired.de: Dieser Kuchen ist nicht verdorben.
+messages.spoileralert-hit-cakes-first.de: Schlage, nächstes Mal erst den Kuchen, um herauszufinden, ober noch genießbar ist, oder nicht.
+messages.spoileralert-expired-message.de: Verdorben seit {0} Tage(n)- Gefahrenstufe {1}
 messages.spoileralert-date.de: Datum
 messages.spoileralert-cant-trade-spoiled-good.de: §4Du kannst nicht mit verdorbenen Waren handeln.
 
