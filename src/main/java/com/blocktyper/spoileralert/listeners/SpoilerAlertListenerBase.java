@@ -29,9 +29,9 @@ import com.blocktyper.spoileralert.PerishableBlock;
 import com.blocktyper.spoileralert.PerishableBlockRepo;
 import com.blocktyper.spoileralert.SpoilerAlertCalendar;
 import com.blocktyper.spoileralert.SpoilerAlertPlugin;
-import com.blocktyper.v1_2_0.helpers.InvisibleLoreHelper;
-import com.blocktyper.v1_2_0.nbt.NBTItem;
-import com.blocktyper.v1_2_0.recipes.translation.ContinuousTranslationListener;
+import com.blocktyper.v1_2_3.helpers.InvisHelper;
+import com.blocktyper.v1_2_3.nbt.NBTItem;
+import com.blocktyper.v1_2_3.recipes.translation.ContinuousTranslationListener;
 
 public abstract class SpoilerAlertListenerBase extends ContinuousTranslationListener {
 
@@ -125,7 +125,7 @@ public abstract class SpoilerAlertListenerBase extends ContinuousTranslationList
 	}
 
 	private boolean loreLineContainsInvisExpirationDatePrefix(String loreLine) {
-		return loreLine != null && InvisibleLoreHelper.convertToVisibleString(loreLine)
+		return loreLine != null && InvisHelper.convertToVisibleString(loreLine)
 				.contains(INVISIBLE_PREFIX_SPOILER_ALERT_EXPIRATION_DATE);
 	}
 	
@@ -192,7 +192,7 @@ public abstract class SpoilerAlertListenerBase extends ContinuousTranslationList
 	}
 
 	private String getExpirationDateLoreLine(HumanEntity player, String formattedDateString) {
-		String invis = InvisibleLoreHelper.convertToInvisibleString(INVISIBLE_PREFIX_SPOILER_ALERT_EXPIRATION_DATE);
+		String invis = InvisHelper.convertToInvisibleString(INVISIBLE_PREFIX_SPOILER_ALERT_EXPIRATION_DATE);
 		String expirationDateText = getLocalizedMessage(LocalizedMessageEnum.EXPIRATION_DATE.getKey(), player);
 		String loreFormat = "{0}{1}: {2}";
 		String loreLine = new MessageFormat(loreFormat)

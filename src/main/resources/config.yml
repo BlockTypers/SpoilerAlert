@@ -29,6 +29,10 @@ spoileralert-date-format.en_us: M/d/yyyy
 spoileralert-date-format.zh_cn: yyyy-MM-dd
 spoileralert-date-format.de: dd-MM-yyyy
 
+spoiler-alert-immune-permissions:
+  - spoiler-alert-immune
+  - your-custom-permission-here
+
 spoileralert-recipe-shelf-life: 
   - candy-apple=21
   - salted-beef=21
