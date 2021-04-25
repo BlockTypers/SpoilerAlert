@@ -29,9 +29,9 @@ import com.blocktyper.spoileralert.PerishableBlock;
 import com.blocktyper.spoileralert.PerishableBlockRepo;
 import com.blocktyper.spoileralert.SpoilerAlertCalendar;
 import com.blocktyper.spoileralert.SpoilerAlertPlugin;
-import com.blocktyper.v1_2_6.helpers.InvisHelper;
-import com.blocktyper.v1_2_6.nbt.NBTItem;
-import com.blocktyper.v1_2_6.recipes.translation.ContinuousTranslationListener;
+import com.blocktyper.v1_16_5.helpers.InvisHelper;
+import com.blocktyper.v1_16_5.nbt.NBTItem;
+import com.blocktyper.v1_16_5.recipes.translation.ContinuousTranslationListener;
 
 public abstract class SpoilerAlertListenerBase extends ContinuousTranslationListener {
 
